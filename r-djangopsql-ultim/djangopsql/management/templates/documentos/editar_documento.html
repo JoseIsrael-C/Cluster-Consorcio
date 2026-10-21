@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Editar Documento{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-edit"></i> Editar Documento Personal</h2>
+                {% if user.alumno %}
+                    <a href="{% url 'detalle_alumno' user.alumno.id %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                {% else %}
+                    <a href="{% url 'listar_documentos' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Información del Documento</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="categoria" class="form-label">Categoría del Documento *</label>
+                            <select class="form-select" id="categoria" name="categoria" required>
+                                <option value="">Seleccione una categoría</option>
+                                {% for categoria in categorias %}
+                                    <option value="{{ categoria.id }}" {% if categoria.id == documento.categoria.id %}selected{% endif %}>
+                                        {{ categoria.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nombre_documento" class="form-label">Nombre del Documento *</label>
+                            <input type="text" class="form-control" id="nombre_documento" name="nombre_documento" 
+                                   value="{{ documento.nombre_documento }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3">{{ documento.descripcion }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Archivo Actual</label>
+                            {% if documento.archivo %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-file"></i> 
+                                    <a href="{{ documento.archivo.url }}" target="_blank" class="text-decoration-none">
+                                        {{ documento.archivo.name|slice:"10:" }}
+                                    </a>
+                                    <small class="text-muted d-block">Subido el {{ documento.fecha_subida|date:"d/m/Y H:i" }}</small>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> No hay archivo asociado
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="archivo" class="form-label">Reemplazar Archivo</label>
+                            <input type="file" class="form-control" id="archivo" name="archivo" 
+                                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <div class="form-text">
+                                Opcional. Solo seleccione un archivo si desea reemplazar el actual.
+                                Formatos permitidos: PDF, DOC, DOCX, JPG, JPEG, PNG. Tamaño máximo: 10MB
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento</label>
+                            <input type="date" class="form-control" id="fecha_vencimiento" name="fecha_vencimiento" 
+                                   value="{% if documento.fecha_vencimiento %}{{ documento.fecha_vencimiento|date:'Y-m-d' }}{% endif %}">
+                            <div class="form-text">
+                                Opcional. Fecha en la que el documento pierde vigencia.
+                            </div>
+                        </div>
+
+                        {% if documento.estado == 'rechazado' and documento.observaciones %}
+                            <div class="mb-3">
+                                <label class="form-label">Observaciones del Rechazo</label>
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ documento.observaciones }}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Estado Actual</label>
+                                <div>
+                                    {% if documento.estado == 'pendiente' %}
+                                        <span class="badge bg-warning fs-6">
+                                            <i class="fas fa-clock"></i> Pendiente
+                                        </span>
+                                    {% elif documento.estado == 'aprobado' %}
+                                        <span class="badge bg-success fs-6">
+                                            <i class="fas fa-check"></i> Aprobado
+                                        </span>
+                                    {% elif documento.estado == 'rechazado' %}
+                                        <span class="badge bg-danger fs-6">
+                                            <i class="fas fa-times"></i> Rechazado
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fecha de Subida</label>
+                                <div class="text-muted">
+                                    {{ documento.fecha_subida|date:"d/m/Y H:i" }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            {% if user.alumno %}
+                                <a href="{% url 'detalle_alumno' user.alumno.id %}" class="btn btn-secondary me-md-2">
+                                    <i class="fas fa-arrow-left"></i> Cancelar
+                                </a>
+                            {% else %}
+                                <a href="{% url 'listar_documentos' %}" class="btn btn-secondary me-md-2">
+                                    <i class="fas fa-arrow-left"></i> Cancelar
+                                </a>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Información del Usuario</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Usuario:</strong> {{ documento.usuario.username }}</p>
+                    <p><strong>Nombre:</strong> {{ documento.usuario.first_name }} {{ documento.usuario.last_name }}</p>
+                    <p><strong>Email:</strong> {{ documento.usuario.email }}</p>
+                    {% if documento.usuario.alumno %}
+                        <p><strong>Matrícula:</strong> {{ documento.usuario.alumno.matricula }}</p>
+                        <p><strong>Carrera:</strong> {{ documento.usuario.alumno.carrera.nombre }}</p>
+                        <p><strong>Estado:</strong>
+                            {% if documento.usuario.alumno.estado == 'activo' %}
+                                <span class="badge bg-success">Activo</span>
+                            {% elif documento.usuario.alumno.estado == 'inactivo' %}
+                                <span class="badge bg-secondary">Inactivo</span>
+                            {% elif documento.usuario.alumno.estado == 'egresado' %}
+                                <span class="badge bg-primary">Egresado</span>
+                            {% else %}
+                                <span class="badge bg-warning">Baja Temporal</span>
+                            {% endif %}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Estado del Documento</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Estado:</strong>
+                        {% if documento.estado == 'aprobado' %}
+                            <span class="badge bg-success">Aprobado</span>
+                        {% elif documento.estado == 'rechazado' %}
+                            <span class="badge bg-danger">Rechazado</span>
+                        {% else %}
+                            <span class="badge bg-warning">Pendiente</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Fecha de Subida:</strong> {{ documento.fecha_subida|date:"d/m/Y H:i" }}</p>
+                    {% if documento.fecha_vencimiento %}
+                        <p><strong>Fecha de Vencimiento:</strong> {{ documento.fecha_vencimiento|date:"d/m/Y" }}</p>
+                        {% if documento.esta_vencido %}
+                            <p class="text-danger"><strong>⚠️ Documento Vencido</strong></p>
+                        {% endif %}
+                    {% endif %}
+                    {% if documento.observaciones %}
+                        <p><strong>Observaciones:</strong></p>
+                        <div class="alert alert-info">
+                            {{ documento.observaciones }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<script>
+// Validación del tamaño del archivo
+document.getElementById('archivo').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const maxSize = 10 * 1024 * 1024; // 10MB en bytes
+        if (file.size > maxSize) {
+            alert('El archivo es demasiado grande. El tamaño máximo permitido es 10MB.');
+            e.target.value = '';
+        }
+    }
+});
+</script>
+{% endblock %}

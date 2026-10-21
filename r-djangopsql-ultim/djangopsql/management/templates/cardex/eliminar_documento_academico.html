@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Eliminar Documento Académico{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-trash-alt"></i> Eliminar Documento Académico</h2>
+                <a href="{% url 'detalle_alumno' documento.alumno.id %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger" role="alert">
+                        <h6><i class="fas fa-warning"></i> ¡Atención!</h6>
+                        <p>Estás a punto de eliminar permanentemente el siguiente documento académico:</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ documento.titulo }}</h5>
+                            <p class="card-text">{{ documento.descripcion|truncatechars:200 }}</p>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Tipo:</strong> {{ documento.get_tipo_documento_display }}</p>
+                                    <p><strong>Periodo:</strong> {{ documento.periodo_academico|default:"No especificado" }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Estado:</strong>
+                                        {% if documento.estado_revision == 'aprobado' %}
+                                            <span class="badge bg-success">Aprobado</span>
+                                        {% elif documento.estado_revision == 'rechazado' %}
+                                            <span class="badge bg-danger">Rechazado</span>
+                                        {% elif documento.estado_revision == 'en_revision' %}
+                                            <span class="badge bg-warning">En Revisión</span>
+                                        {% else %}
+                                            <span class="badge bg-info">Pendiente</span>
+                                        {% endif %}
+                                    </p>
+                                    <p><strong>Fecha de Subida:</strong> {{ documento.fecha_subida|date:"d/m/Y H:i" }}</p>
+                                </div>
+                            </div>
+
+                            {% if documento.archivo %}
+                                <div class="mt-3">
+                                    <strong>Archivo:</strong> {{ documento.archivo.name }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning mt-3" role="alert">
+                        <strong>Nota:</strong> Esta acción no se puede deshacer. El documento será marcado como eliminado y ya no estará disponible.
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-end mt-4">
+                            <a href="{% url 'detalle_alumno' documento.alumno.id %}" class="btn btn-secondary me-2">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Eliminar Documento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Información del Alumno</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nombre:</strong> {{ documento.alumno.nombre_completo }}</p>
+                    <p><strong>Matrícula:</strong> {{ documento.alumno.matricula }}</p>
+                    <p><strong>Carrera:</strong> {{ documento.alumno.carrera.nombre }}</p>
+                    <p><strong>Estado:</strong>
+                        {% if documento.alumno.estado == 'activo' %}
+                            <span class="badge bg-success">Activo</span>
+                        {% elif documento.alumno.estado == 'inactivo' %}
+                            <span class="badge bg-secondary">Inactivo</span>
+                        {% elif documento.alumno.estado == 'egresado' %}
+                            <span class="badge bg-primary">Egresado</span>
+                        {% else %}
+                            <span class="badge bg-warning">Baja Temporal</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Información Adicional</h5>
+                </div>
+                <div class="card-body">
+                    {% if documento.fecha_revision %}
+                        <p><strong>Última Revisión:</strong> {{ documento.fecha_revision|date:"d/m/Y H:i" }}</p>
+                    {% endif %}
+                    {% if documento.revisado_por %}
+                        <p><strong>Revisado por:</strong> {{ documento.revisado_por.get_full_name|default:documento.revisado_por.username }}</p>
+                    {% endif %}
+                    {% if documento.comentarios_revision %}
+                        <p><strong>Comentarios:</strong></p>
+                        <p class="text-muted small">{{ documento.comentarios_revision }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}

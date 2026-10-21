@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Editar Calificación{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-edit"></i> Editar Calificación</h2>
+                <a href="{% url 'historial_calificaciones' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver al Historial
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Información de la calificación actual -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Información Actual</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Alumno:</strong> {{ calificacion.alumno.nombre_completo }}</p>
+                    <p><strong>Matrícula:</strong> {{ calificacion.alumno.matricula }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Materia:</strong> {{ calificacion.materia.nombre }}</p>
+                    <p><strong>Código:</strong> {{ calificacion.materia.codigo_materia }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario de edición -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Editar Calificación</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="calificacion" class="form-label">Calificación *</label>
+                            <input type="number" step="0.1" min="0" max="10" class="form-control"
+                                   id="calificacion" name="calificacion"
+                                   value="{{ calificacion.calificacion|default:'' }}"
+                                   placeholder="Ej: 8.5">
+                            <div class="form-text">Ingresa la calificación numérica (0-10)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="estado" class="form-label">Estado</label>
+                            <input type="text" class="form-control" id="estado" name="estado" readonly
+                                   value="{% if calificacion.estado == 'aprobada' %}Aprobada{% elif calificacion.estado == 'reprobada' %}Reprobada{% elif calificacion.estado == 'cursando' %}Cursando{% elif calificacion.estado == 'especial' %}Especial{% else %}Por determinar{% endif %}">
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i>
+                                El estado se determina automáticamente según la calificación:
+                                <strong>≥ 7.0 = Aprobada</strong>,
+                                <strong>< 7.0 = Reprobada</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="periodo" class="form-label">Periodo *</label>
+                            <input type="text" class="form-control" id="periodo" name="periodo"
+                                   value="{{ calificacion.periodo }}" placeholder="Ej: 2025-1" required>
+                            <div class="form-text">Formato: AÑO-NÚMERO (ej: 2025-1)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="profesor" class="form-label">Profesor</label>
+                            <input type="text" class="form-control" id="profesor" name="profesor"
+                                   value="{{ calificacion.profesor|default:'' }}"
+                                   placeholder="Nombre del profesor">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="observaciones" class="form-label">Observaciones</label>
+                    <textarea class="form-control" id="observaciones" name="observaciones" rows="3"
+                              placeholder="Observaciones adicionales...">{{ calificacion.observaciones|default:'' }}</textarea>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="{% url 'historial_calificaciones' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Actualizar Calificación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<script>
+// Función para actualizar el estado automáticamente
+function actualizarEstado() {
+    const calificacionInput = document.getElementById('calificacion');
+    const estadoInput = document.getElementById('estado');
+    const calificacion = parseFloat(calificacionInput.value);
+
+    if (!isNaN(calificacion) && calificacion >= 0 && calificacion <= 10) {
+        if (calificacion >= 7.0) {
+            estadoInput.value = 'Aprobada';
+        } else {
+            estadoInput.value = 'Reprobada';
+        }
+    } else if (calificacionInput.value === '') {
+        estadoInput.value = 'Por determinar';
+    }
+}
+
+// Validación del formulario
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const calificacionInput = document.getElementById('calificacion');
+
+    // Actualizar estado cuando cambia la calificación
+    calificacionInput.addEventListener('input', actualizarEstado);
+    calificacionInput.addEventListener('change', actualizarEstado);
+
+    // Inicializar el estado al cargar la página
+    actualizarEstado();
+
+    form.addEventListener('submit', function(e) {
+        const calificacion = parseFloat(calificacionInput.value);
+
+        if (calificacionInput.value && (calificacion < 0 || calificacion > 10)) {
+            e.preventDefault();
+            alert('La calificación debe estar entre 0 y 10.');
+            calificacionInput.focus();
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

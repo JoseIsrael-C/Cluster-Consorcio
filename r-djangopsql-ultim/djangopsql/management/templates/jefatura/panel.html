@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid pt-5">
+
+    <!-- Título -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Panel de Jefatura de División</h1>
+    </div>
+
+    <!-- Fila de Tarjetas de Estadísticas -->
+    <div class="row">
+
+        <!-- Total Alumnos -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Alumnos Activos</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_alumnos }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentos Pendientes -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Docs. Pendientes</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_documentos_pendientes }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-contract fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alumnos en Riesgo -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Alumnos Riesgo (< 7.0)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_alumnos_bajo_promedio }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentos Hoy -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Subidos Hoy</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ documentos_hoy }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fila de Contenido Detallado -->
+    <div class="row">
+
+        <!-- Últimos Documentos -->
+        <div class="col-lg-7 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Últimos Documentos Académicos</h6>
+                    <a href="{% url 'gestionar_documentos_academicos' %}" class="btn btn-sm btn-primary">Ver Todos</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Alumno</th>
+                                    <th>Documento</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for doc in ultimos_documentos %}
+                                <tr>
+                                    <td>{{ doc.alumno.nombre }} {{ doc.alumno.apellido_paterno }}</td>
+                                    <td>{{ doc.titulo }}</td>
+                                    <td>{{ doc.fecha_subida|date:"d/m/Y" }}</td>
+                                    <td>
+                                        {% if doc.estado_revision == 'aprobado' %}
+                                            <span class="badge bg-success">Aprobado</span>
+                                        {% elif doc.estado_revision == 'pendiente' %}
+                                            <span class="badge bg-warning text-dark">Pendiente</span>
+                                        {% elif doc.estado_revision == 'rechazado' %}
+                                            <span class="badge bg-danger">Rechazado</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ doc.estado_revision }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">No hay documentos recientes.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alumnos con Bajo Promedio -->
+        <div class="col-lg-5 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-danger">Alumnos con Bajo Promedio</h6>
+                </div>
+                <div class="card-body">
+                    {% if lista_alumnos_bajo_promedio %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Matrícula</th>
+                                        <th>Nombre</th>
+                                        <th>Promedio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for alumno in lista_alumnos_bajo_promedio %}
+                                    <tr>
+                                        <td>{{ alumno.matricula }}</td>
+                                        <td>{{ alumno.nombre }} {{ alumno.apellido_paterno }}</td>
+                                        <td class="text-danger font-weight-bold">{{ alumno.promedio_general|floatformat:1 }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-center text-success my-4">
+                            <i class="fas fa-check-circle fa-3x mb-3"></i><br>
+                            ¡Excelente! No hay alumnos con promedio crítico.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

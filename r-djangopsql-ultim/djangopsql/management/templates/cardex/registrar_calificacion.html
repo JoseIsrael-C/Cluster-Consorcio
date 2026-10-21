@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Registrar Calificación{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-graduation-cap"></i> Registrar Calificación
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="alumno" class="form-label">Alumno *</label>
+                                    <select class="form-select" id="alumno" name="alumno" required onchange="filtrarMateriasPorCarrera()">
+                                        <option value="">Seleccione un alumno</option>
+                                        {% for alumno in alumnos %}
+                                            <option value="{{ alumno.id }}" data-carrera="{{ alumno.carrera.id }}" {% if alumno_preseleccionado and alumno_preseleccionado.id == alumno.id %}selected{% endif %}>
+                                                {{ alumno.matricula }} - {{ alumno.nombre_completo }} ({{ alumno.carrera.nombre }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    {% if alumno_preseleccionado %}
+                                        <div class="form-text">
+                                            <strong>Carrera:</strong> {{ alumno_preseleccionado.carrera.nombre }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="materia" class="form-label">Materia *</label>
+                                    <select class="form-select" id="materia" name="materia" required>
+                                        <option value="">Seleccione una materia</option>
+                                        {% if alumno_preseleccionado %}
+                                            <!-- Mostrar solo materias de la carrera del alumno preseleccionado -->
+                                            {% for materia in materias %}
+                                                <option value="{{ materia.id }}">
+                                                    {{ materia.nombre }} ({{ materia.codigo_materia }}) - Semestre {{ materia.semestre }}
+                                                </option>
+                                            {% endfor %}
+                                        {% else %}
+                                            <!-- Mostrar todas las materias agrupadas por carrera -->
+                                            {% for materia in materias %}
+                                                <option value="{{ materia.id }}" data-carrera="{{ materia.carrera.id }}">
+                                                    {{ materia.nombre }} ({{ materia.codigo_materia }}) - {{ materia.carrera.nombre }} - Semestre {{ materia.semestre }}
+                                                </option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                    <div class="form-text" id="materia-info">
+                                        {% if alumno_preseleccionado %}
+                                            Solo se muestran las materias de la carrera: <strong>{{ alumno_preseleccionado.carrera.nombre }}</strong>
+                                        {% else %}
+                                            Seleccione un alumno para filtrar las materias por su carrera
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="calificacion" class="form-label">Calificación</label>
+                                    <input type="number" class="form-control" id="calificacion" name="calificacion"
+                                           step="0.1" min="0" max="10" placeholder="Ej: 8.5">
+                                    <div class="form-text">Dejar vacío si aún no se califica</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="estado" class="form-label">Estado *</label>
+                                    <select class="form-select" id="estado" name="estado" required>
+                                        <option value="cursando">Cursando</option>
+                                        <option value="aprobada">Aprobada</option>
+                                        <option value="reprobada">Reprobada</option>
+                                        <option value="especial">Especial</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="periodo" class="form-label">Periodo Académico *</label>
+                                    <input type="text" class="form-control" id="periodo" name="periodo"
+                                           placeholder="Ej: 2025-1" required>
+                                    <div class="form-text">Formato: AAAA-N (ej: 2025-1)</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="profesor" class="form-label">Profesor</label>
+                                    <input type="text" class="form-control" id="profesor" name="profesor"
+                                           placeholder="Nombre del profesor">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="observaciones" class="form-label">Observaciones</label>
+                            <textarea class="form-control" id="observaciones" name="observaciones" rows="3"
+                                      placeholder="Observaciones adicionales sobre la calificación"></textarea>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Nota:</strong> Si la calificación es menor a 7.0 y el estado es "Aprobada",
+                            el sistema automáticamente cambiará el estado a "Reprobada".
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'historial_calificaciones' %}" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Registrar Calificación
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<script>
+// Función para filtrar materias por carrera del alumno seleccionado
+function filtrarMateriasPorCarrera() {
+    const alumnoSelect = document.getElementById('alumno');
+    const materiaSelect = document.getElementById('materia');
+    const materiaInfo = document.getElementById('materia-info');
+
+    const alumnoSeleccionado = alumnoSelect.value;
+
+    if (!alumnoSeleccionado) {
+        // Si no hay alumno seleccionado, mostrar mensaje inicial
+        materiaSelect.innerHTML = '<option value="">Seleccione un alumno primero</option>';
+        if (materiaInfo) {
+            materiaInfo.textContent = 'Seleccione un alumno para ver sus materias disponibles';
+        }
+        return;
+    }
+
+    // Obtener la carrera del alumno seleccionado
+    const selectedOption = alumnoSelect.options[alumnoSelect.selectedIndex];
+    const carreraId = selectedOption.getAttribute('data-carrera');
+    const carreraNombre = selectedOption.textContent.split('(')[1]?.split(')')[0] || 'Carrera desconocida';
+
+    // Limpiar el select de materias
+    materiaSelect.innerHTML = '<option value="">Cargando materias...</option>';
+
+    // Realizar petición AJAX para obtener las materias de la carrera
+    fetch(`/management/ajax/filtrar-materias/?carrera_id=${carreraId}`)
+        .then(response => response.json())
+        .then(data => {
+            // Limpiar el select
+            materiaSelect.innerHTML = '<option value="">Seleccione una materia</option>';
+
+            if (data.materias && data.materias.length > 0) {
+                // Ordenar por semestre y nombre
+                data.materias.sort((a, b) => {
+                    if (a.semestre !== b.semestre) {
+                        return a.semestre - b.semestre;
+                    }
+                    return a.nombre.localeCompare(b.nombre);
+                });
+
+                // Agregar las materias filtradas
+                data.materias.forEach(materia => {
+                    const option = document.createElement('option');
+                    option.value = materia.id;
+                    option.textContent = `${materia.nombre} (${materia.codigo}) - Semestre ${materia.semestre}`;
+                    materiaSelect.appendChild(option);
+                });
+
+                // Actualizar información
+                if (materiaInfo) {
+                    materiaInfo.innerHTML = `<strong>${data.materias.length}</strong> materias disponibles para la carrera: <strong>${carreraNombre}</strong>`;
+                }
+            } else {
+                // No hay materias para esta carrera
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'No hay materias registradas para esta carrera';
+                option.disabled = true;
+                materiaSelect.appendChild(option);
+
+                if (materiaInfo) {
+                    materiaInfo.innerHTML = '<span class="text-warning">No hay materias registradas para la carrera: <strong>' + carreraNombre + '</strong></span>';
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error al filtrar materias:', error);
+            materiaSelect.innerHTML = '<option value="">Error al cargar materias</option>';
+            if (materiaInfo) {
+                materiaInfo.innerHTML = '<span class="text-danger">Error al cargar las materias</span>';
+            }
+        });
+}
+
+// Auto-fill periodo with current academic period
+document.addEventListener('DOMContentLoaded', function() {
+    const periodoInput = document.getElementById('periodo');
+    if (!periodoInput.value) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const periodo = month <= 6 ? '1' : '2';
+        periodoInput.value = year + '-' + periodo;
+    }
+
+    // Aplicar filtro inicial si hay alumno preseleccionado
+    const alumnoPreseleccionado = "{{ alumno_preseleccionado.id|default:'' }}";
+    if (alumnoPreseleccionado) {
+        filtrarMateriasPorCarrera();
+    }
+});
+
+// Validation for calificación and estado
+document.getElementById('calificacion').addEventListener('blur', function() {
+    const calificacion = parseFloat(this.value);
+    const estadoSelect = document.getElementById('estado');
+
+    if (!isNaN(calificacion) && calificacion < 7.0 && estadoSelect.value === 'aprobada') {
+        if (confirm('La calificación es menor a 7.0. ¿Desea cambiar el estado a "Reprobada"?')) {
+            estadoSelect.value = 'reprobada';
+        }
+    }
+});
+</script>
+{% endblock %}

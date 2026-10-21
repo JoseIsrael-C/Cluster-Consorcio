@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Subir Documento{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-upload"></i> Subir Nuevo Documento
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="tipo_documento" class="form-label">Tipo de Documento *</label>
+                            <select class="form-select" id="tipo_documento" name="tipo_documento" required onchange="toggleFields()">
+                                <option value="">Seleccione el tipo de documento</option>
+                                <option value="personal">Documento Personal</option>
+                                <option value="academico">Documento Académico</option>
+                                <option value="titulacion">Documento de Titulación</option>
+                            </select>
+                        </div>
+
+
+
+                        <div class="mb-3">
+                            <label for="nombre_documento" class="form-label">Nombre del Documento *</label>
+                            <input type="text" class="form-control" id="nombre_documento" name="nombre_documento" 
+                                   placeholder="Ej: Acta de Nacimiento" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" 
+                                      placeholder="Descripción opcional del documento"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="archivo" class="form-label">Archivo *</label>
+                            <input type="file" class="form-control" id="archivo" name="archivo" 
+                                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required>
+                            <div class="form-text">
+                                Formatos permitidos: PDF, DOC, DOCX, JPG, JPEG, PNG. Tamaño máximo: 10MB
+                            </div>
+                        </div>
+
+
+                        <div class="mb-3" id="periodo_field" style="display: none;">
+                            <label for="periodo_academico" class="form-label">Periodo Académico</label>
+                            <select class="form-select" id="periodo_academico" name="periodo_academico">
+                                <option value="">Seleccione el periodo</option>
+                                <option value="2025-1">2025-1</option>
+                                <option value="2025-2">2025-2</option>
+                                <option value="2024-1">2024-1</option>
+                                <option value="2024-2">2024-2</option>
+                                <option value="2023-1">2023-1</option>
+                                <option value="2023-2">2023-2</option>
+                            </select>
+                            <div class="form-text">
+                                Opcional. Periodo académico al que pertenece el documento.
+                            </div>
+                        </div>
+
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'listar_documentos' %}" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary" onclick="return validarFormulario()">
+                                <i class="fas fa-upload"></i> Subir Documento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<script>
+// Función para mostrar/ocultar campos según el tipo de documento
+function toggleFields() {
+    const tipoDocumento = document.getElementById('tipo_documento').value;
+    const periodoField = document.getElementById('periodo_field');
+
+    // Ocultar todos los campos condicionales
+    if (periodoField) {
+        periodoField.style.display = 'none';
+    }
+
+    if (!tipoDocumento) return;
+
+    // Mostrar campo de periodo para documentos académicos y de titulación
+    if (tipoDocumento === 'academico' || tipoDocumento === 'titulacion') {
+        if (periodoField) {
+            periodoField.style.display = 'block';
+        }
+    }
+}
+
+// Validación del tamaño del archivo
+document.getElementById('archivo').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const maxSize = 10 * 1024 * 1024; // 10MB en bytes
+        if (file.size > maxSize) {
+            alert('El archivo es demasiado grande. El tamaño máximo permitido es 10MB.');
+            e.target.value = '';
+        }
+    }
+});
+
+// Función para validar el formulario antes de enviarlo
+function validarFormulario() {
+    console.log('Validando formulario...');
+    
+    const tipoDocumento = document.getElementById('tipo_documento').value;
+    const nombreDocumento = document.getElementById('nombre_documento').value;
+    const archivo = document.getElementById('archivo').files[0];
+    
+    console.log('Tipo documento:', tipoDocumento);
+    console.log('Nombre documento:', nombreDocumento);
+    console.log('Archivo:', archivo);
+    
+    // Validaciones básicas
+    if (!tipoDocumento) {
+        alert('Por favor seleccione un tipo de documento');
+        return false;
+    }
+    
+    if (!nombreDocumento) {
+        alert('Por favor ingrese el nombre del documento');
+        return false;
+    }
+    
+    if (!archivo) {
+        alert('Por favor seleccione un archivo');
+        return false;
+    }
+    
+    console.log('Formulario válido, enviando...');
+    return true;
+}
+
+// Inicializar campos al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    toggleFields();
+});
+</script>
+{% endblock %}

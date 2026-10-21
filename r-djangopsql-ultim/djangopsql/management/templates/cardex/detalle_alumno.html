@@ -1,0 +1,917 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Detalle del Alumno{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-user-graduate"></i> Detalle del Alumno</h2>
+                <div>
+                    {% if user.is_superuser %}
+                        <a href="{% url 'listar_alumnos' %}" class="btn btn-secondary me-2">
+                            <i class="fas fa-arrow-left"></i> Volver
+                        </a>
+                        <a href="{% url 'editar_alumno' alumno.id %}" class="btn btn-warning me-2">
+                            <i class="fas fa-edit"></i> Editar Alumno
+                        </a>
+                        {% if alumno.curp %}
+                        <a href="{% url 'generar_hash_alumno' alumno.id %}" class="btn btn-success me-2">
+                            <i class="fas fa-link"></i> Generar Hash Blockchain
+                        </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'homeP' %}" class="btn btn-primary me-2">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Información del alumno -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Información Personal</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Matrícula:</strong> {{ alumno.matricula }}</p>
+                            <p><strong>Nombre:</strong> {{ alumno.nombre_completo }}</p>
+                            <p><strong>Carrera:</strong> {{ alumno.carrera.nombre }}</p>
+                            <p><strong>Semestre:</strong> {{ alumno.semestre_actual }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Estado:</strong>
+                                {% if alumno.estado == 'activo' %}
+                                    <span class="badge bg-success">Activo</span>
+                                {% elif alumno.estado == 'inactivo' %}
+                                    <span class="badge bg-secondary">Inactivo</span>
+                                {% elif alumno.estado == 'egresado' %}
+                                    <span class="badge bg-primary">Egresado</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Baja Temporal</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>Fecha de Ingreso:</strong> {{ alumno.fecha_ingreso|date:"d/m/Y" }}</p>
+                            <p><strong>Teléfono:</strong> {{ alumno.telefono|default:"No registrado" }}</p>
+                            <p><strong>Email:</strong> {{ alumno.email_institucional|default:"No registrado" }}</p>
+                            <p><strong>CURP:</strong> {{ alumno.curp|default:"No registrado" }}</p>
+                            
+                            {% if user.is_superuser %}
+                                <hr>
+                                <p><strong>Usuario del Sistema:</strong> {{ alumno.usuario.username }}</p>
+                                <p><strong>Contraseña:</strong>
+                                    <span id="password-display" class="text-danger fw-bold">12345678</span>
+                                    <button type="button" class="btn btn-sm btn-link p-0 ms-2" onclick="togglePasswordVisibility()" title="Mostrar/Ocultar contraseña">
+                                        <i id="password-eye" class="fas fa-eye"></i>
+                                    </button>
+                                    <small class="text-warning">(Visible solo para administradores)</small>
+                                </p>
+                                <div class="mt-2">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="resetPassword('{{ alumno.usuario.id }}')">
+                                        <i class="fas fa-key"></i> Restablecer Contraseña
+                                    </button>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Información del Hash de Blockchain - Solo para Administradores -->
+                            {% if user.is_superuser %}
+                                {% if alumno.hash_alumno %}
+                                <hr>
+                                <div class="alert alert-success">
+                                    <h6 class="alert-heading">
+                                        <i class="fas fa-shield-alt"></i> Hash de Blockchain Generado
+                                    </h6>
+                                    <p class="mb-2"><strong>Hash:</strong> 
+                                        <code class="small">{{ alumno.hash_alumno|truncatechars:20 }}...</code>
+                                    </p>
+                                    <p class="mb-2"><strong>Fecha de Emisión:</strong> {{ alumno.fecha_emision_hash|date:"d/m/Y H:i:s" }}</p>
+                                    <a href="{% url 'generar_hash_alumno' alumno.id %}" class="btn btn-sm btn-outline-success">
+                                        <i class="fas fa-eye"></i> Ver Hash Completo
+                                    </a>
+                                </div>
+                                {% elif alumno.curp %}
+                                <hr>
+                                <div class="alert alert-info">
+                                    <h6 class="alert-heading">
+                                        <i class="fas fa-info-circle"></i> Hash de Blockchain Disponible
+                                    </h6>
+                                    <p class="mb-2">Este alumno puede generar un hash de blockchain con toda su información.</p>
+                                    <a href="{% url 'generar_hash_alumno' alumno.id %}" class="btn btn-sm btn-success">
+                                        <i class="fas fa-link"></i> Generar Hash
+                                    </a>
+                                </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Estadísticas</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <h3 class="text-primary">{{ promedio_general|floatformat:2 }}</h3>
+                        <p class="text-muted">Promedio General</p>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <h4 class="text-success">{{ total_materias_aprobadas }}</h4>
+                            <p class="text-muted small">Materias Aprobadas</p>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="text-warning">{{ total_materias_cursando }}</h4>
+                            <p class="text-muted small">Materias Cursando</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <h4 class="text-info">{{ total_creditos_acumulados }}</h4>
+                        <p class="text-muted small">Total Créditos Acumulados</p>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <span class="text-success fw-bold">{{ total_creditos_aprobados }}</span>
+                            <p class="text-muted small">Créditos Aprobados</p>
+                        </div>
+                        <div class="col-6">
+                            <span class="text-warning fw-bold">{{ total_creditos_cursando }}</span>
+                            <p class="text-muted small">Créditos Cursando</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="text-danger fw-bold">{{ total_creditos_pendientes }}</span>
+                            <p class="text-muted small">Créditos Pendientes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calificaciones -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Historial de Calificaciones</h5>
+                    {% if user.is_superuser %}
+                        <a href="{% url 'registrar_calificacion' %}?alumno={{ alumno.id }}" class="btn btn-success btn-sm">
+                            <i class="fas fa-plus"></i> Nueva Calificación
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if calificaciones %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Materia</th>
+                                        <th>Calificación</th>
+                                        <th>Estado</th>
+                                        <th>Periodo</th>
+                                        <th>Profesor</th>
+                                        <th>Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for calificacion in calificaciones %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ calificacion.materia.nombre }}</strong><br>
+                                                <small class="text-muted">{{ calificacion.materia.codigo_materia }}</small>
+                                            </td>
+                                            <td>
+                                                {% if calificacion.calificacion %}
+                                                    <span class="badge bg-{% if calificacion.calificacion >= 8 %}success{% elif calificacion.calificacion >= 7 %}warning{% else %}danger{% endif %}">
+                                                        {{ calificacion.calificacion|floatformat:1 }}
+                                                    </span>
+                                                {% else %}
+                                                    <span class="text-muted">Sin calificar</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if calificacion.estado == 'aprobada' or calificacion.estado == 'aprobado' %}
+                                                    <span class="badge bg-success">Aprobada</span>
+                                                {% elif calificacion.estado == 'reprobada' or calificacion.estado == 'reprobado' %}
+                                                    <span class="badge bg-danger">Reprobada</span>
+                                                {% elif calificacion.estado == 'cursando' %}
+                                                    <span class="badge bg-warning">Cursando</span>
+                                                {% else %}
+                                                    <span class="badge bg-info">{{ calificacion.estado|title }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ calificacion.periodo }}</td>
+                                            <td>{{ calificacion.profesor|default:"No especificado" }}</td>
+                                            <td>{{ calificacion.fecha_registro|date:"d/m/Y" }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-graduation-cap fa-2x text-muted mb-3"></i>
+                            <h5>No hay calificaciones registradas</h5>
+                            <p class="text-muted">Este alumno aún no tiene calificaciones registradas.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documentos académicos -->
+    <div class="row mb-4" id="documentos-academicos">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0"><i class="fas fa-graduation-cap"></i> Documentos Académicos</h5>
+                    <a href="{% url 'subir_documento_academico_alumno' alumno.id %}" class="btn btn-sm btn-success">
+                        <i class="fas fa-upload"></i> Subir Documento Académico
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if documentos %}
+                        <div class="row">
+                            {% for documento in documentos %}
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <i class="fas fa-file-alt text-primary"></i>
+                                                {{ documento.titulo }}
+                                            </h6>
+                                            <p class="card-text small">{{ documento.descripcion|truncatechars:100 }}</p>
+                                            <div class="mb-2">
+                                                <span class="badge bg-secondary">{{ documento.tipo_documento|title }}</span>
+                                                {% if documento.estado_revision == 'aprobado' %}
+                                                    <span class="badge bg-success">Aprobado</span>
+                                                {% elif documento.estado_revision == 'rechazado' %}
+                                                    <span class="badge bg-danger">Rechazado</span>
+                                                {% elif documento.estado_revision == 'en_revision' %}
+                                                    <span class="badge bg-warning">En Revisión</span>
+                                                {% else %}
+                                                    <span class="badge bg-info">Pendiente</span>
+                                                {% endif %}
+                                            </div>
+                                            <small class="text-muted">
+                                                Subido: {{ documento.fecha_subida|date:"d/m/Y" }}
+                                            </small>
+                                            {% if documento.certificado_hash and user.is_superuser %}
+                                                <div class="mt-2">
+                                                    <small class="text-success fw-bold">
+                                                        <i class="fas fa-check-circle"></i> Certificado en Blockchain
+                                                    </small>
+                                                    <br>
+                                                    <small class="text-muted" style="font-size: 0.75em; word-break: break-all;">
+                                                        Hash: 
+                                                        {% if documento.certificado_hash|length == 66 and documento.certificado_hash|slice:":2" == "0x" %}
+                                                            <a href="{% url 'verificar_certificado_blockchain' %}?hash={{ documento.certificado_hash }}" target="_blank" title="Verificar transacción en la blockchain">
+                                                                {{ documento.certificado_hash|truncatechars:20 }}
+                                                                <i class="fas fa-external-link-alt fa-xs"></i>
+                                                            </a>
+                                                        {% else %}
+                                                            <span class="text-warning" title="Hash con formato incorrecto - no se puede verificar">
+                                                                {{ documento.certificado_hash|truncatechars:20 }}
+                                                                <i class="fas fa-exclamation-triangle fa-xs"></i>
+                                                            </span>
+                                                        {% endif %}
+                                                    </small>
+                                                </div>
+                                            {% elif documento.certificado_hash and not user.is_superuser %}
+                                                <div class="mt-2">
+                                                    <small class="text-success fw-bold">
+                                                        <i class="fas fa-check-circle"></i> Certificado en Blockchain
+                                                    </small>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-lock"></i> Hash disponible solo para administradores
+                                                    </small>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-footer">
+                                            {% if documento.archivo %}
+                                                <!-- Botón Ver Documento -->
+                                                <a href="{{ documento.archivo.url }}" target="_blank" class="btn btn-sm btn-outline-primary me-1" title="Ver documento completo">
+                                                    <i class="fas fa-eye"></i> Ver
+                                                </a>
+
+                                                <!-- Botón Editar (solo para el alumno o superusuarios) -->
+                                                {% if user.is_superuser or user == alumno.usuario %}
+                                                    <a href="{% url 'editar_documento_academico' documento.id %}" class="btn btn-sm btn-outline-warning me-1" title="Editar información del documento">
+                                                        <i class="fas fa-edit"></i> Editar
+                                                    </a>
+                                                {% endif %}
+
+                                                <!-- Botones de Revisión (solo para superusuarios) -->
+                                                {% if user.is_superuser %}
+                                                    {% if documento.estado_revision != 'aprobado' %}
+                                                        <!-- Botón de Revisar -->
+                                                        <a href="{% url 'revisar_documento_academico' documento.id %}" class="btn btn-sm btn-outline-info me-1" title="Revisar, aprobar o rechazar documento">
+                                                            <i class="fas fa-check-double"></i> Revisar
+                                                        </a>
+                                                    {% endif %}
+
+                                                    <!-- Botón Aprobar Rápido -->
+                                                    {% if documento.estado_revision != 'aprobado' %}
+                                                        <form method="post" action="{% url 'revisar_documento_academico' documento.id %}" style="display:inline;">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="accion" value="aprobar">
+                                                            <input type="hidden" name="comentarios" value="Aprobado automáticamente">
+                                                            <button type="submit" class="btn btn-sm btn-success me-1" title="Aprobar documento inmediatamente">
+                                                                <i class="fas fa-check"></i> Aprobar
+                                                            </button>
+                                                        </form>
+                                                    {% endif %}
+
+                                                    <!-- Botón Rechazar Rápido -->
+                                                    {% if documento.estado_revision != 'rechazado' %}
+                                                        <button type="button" class="btn btn-sm btn-danger me-1" data-bs-toggle="modal" data-bs-target="#rechazarModal{{ documento.id }}" title="Rechazar documento">
+                                                            <i class="fas fa-times"></i> Rechazar
+                                                        </button>
+                                                    {% endif %}
+                                                {% endif %}
+
+                                                <!-- Botón Certificado Blockchain -->
+                                                {% if user.is_superuser and alumno.curp and documento.estado_revision == 'aprobado' %}
+                                                    {% if documento.certificado_hash %}
+                                                        <a href="{% url 'ver_certificado_documento' documento.id 'academico' %}" class="btn btn-sm btn-success me-1" title="Ver Certificado Blockchain">
+                                                            <i class="fas fa-certificate"></i> Ver Cert.
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="{% url 'generar_certificado_documento' documento.id 'academico' %}" class="btn btn-sm btn-outline-success me-1" title="Generar Certificado Blockchain">
+                                                            <i class="fas fa-certificate"></i> Certificar
+                                                        </a>
+                                                    {% endif %}
+                                                {% elif user.is_superuser and alumno.curp and documento.estado_revision != 'aprobado' %}
+                                                    <span class="btn btn-sm btn-outline-secondary disabled me-1" title="El documento debe estar aprobado para poder certificarlo">
+                                                        <i class="fas fa-lock"></i> No Aprobado
+                                                    </span>
+                                                {% endif %}
+
+                                                <!-- Botón Eliminar (solo para superusuarios) -->
+                                                {% if user.is_superuser %}
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarModalAcademico{{ documento.id }}" title="Eliminar documento">
+                                                        <i class="fas fa-trash"></i> Eliminar
+                                                    </button>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <!-- Modal de confirmación para eliminar -->
+                                    {% if user.is_superuser %}
+                                    <div class="modal fade" id="eliminarModalAcademico{{ documento.id }}" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Confirmar Eliminación</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ¿Está seguro de que desea eliminar el documento académico "{{ documento.titulo }}"?<br>
+                                                    <small class="text-muted">Esta acción no se puede deshacer.</small>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <form method="post" action="{% url 'eliminar_documento_academico' documento.id %}" style="display: inline;">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Modal para rechazar documento -->
+                                    <div class="modal fade" id="rechazarModal{{ documento.id }}" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Rechazar Documento</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <form method="post" action="{% url 'revisar_documento_academico' documento.id %}">
+                                                    {% csrf_token %}
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label for="comentarios{{ documento.id }}" class="form-label">Motivo del Rechazo (requerido)</label>
+                                                            <textarea class="form-control" id="comentarios{{ documento.id }}" name="comentarios" rows="4" placeholder="Explique por qué se rechaza el documento..." required></textarea>
+                                                            <small class="text-muted">El alumno verá este comentario cuando consulte el estado de su documento.</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                        <button type="submit" name="accion" value="rechazar" class="btn btn-danger">
+                                                            <i class="fas fa-times"></i> Rechazar Documento
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-folder-open fa-2x text-muted mb-3"></i>
+                            <h5>No hay documentos académicos registrados</h5>
+                            <p class="text-muted">El alumno aún no ha subido documentos académicos.</p>
+                            <a href="{% url 'subir_documento_academico_alumno' alumno.id %}" class="btn btn-primary">
+                                <i class="fas fa-upload"></i> Subir Primer Documento Académico
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trámite de Titulación -->
+    <div class="row mb-4" id="documentos-titulacion">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0"><i class="fas fa-user-graduate"></i> Trámite de Titulación</h5>
+                    <a href="{% url 'subir_documento_titulacion_alumno' alumno.id %}" class="btn btn-sm btn-success">
+                        <i class="fas fa-upload"></i> Subir Documento de Titulación
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if documentos_titulacion %}
+                        <p class="text-muted">Estado de los documentos requeridos para el proceso de titulación.</p>
+                        <ul class="list-group">
+                            {% for doc in documentos_titulacion %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="fas fa-file-signature text-primary"></i>
+                                        <strong class="ms-2">{{ doc.get_tipo_documento_display }}</strong>
+                                        {% if doc.titulo != doc.get_tipo_documento_display %}
+                                            <br><small class="ms-4 text-muted">{{ doc.titulo }}</small>
+                                        {% endif %}
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        {% if doc.estado_revision == 'aprobado' %}
+                                            <span class="badge bg-success me-2">Aprobado</span>
+                                        {% elif doc.estado_revision == 'rechazado' %}
+                                            <span class="badge bg-danger me-2">Rechazado</span>
+                                        {% elif doc.estado_revision == 'en_revision' %}
+                                            <span class="badge bg-warning me-2">En Revisión</span>
+                                        {% else %}
+                                            <span class="badge bg-info me-2">Pendiente</span>
+                                        {% endif %}
+
+                                        {% if doc.archivo %}
+                                            <a href="{{ doc.archivo.url }}" target="_blank" class="btn btn-sm btn-outline-secondary me-2" title="Ver Documento">
+                                                <i class="fas fa-eye"></i> Ver
+                                            </a>
+                                            <a href="{% url 'editar_documento_academico' doc.id %}" class="btn btn-sm btn-outline-warning me-2" title="Editar Documento">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </a>
+                                            
+                                            <!-- Información del hash para documentos de titulación -->
+                                            {% if doc.certificado_hash and user.is_superuser %}
+                                                <div class="mt-2">
+                                                    <small class="text-success fw-bold">
+                                                        <i class="fas fa-check-circle"></i> Certificado en Blockchain
+                                                    </small>
+                                                    <br>
+                                                    <small class="text-muted" style="font-size: 0.75em; word-break: break-all;">
+                                                        Hash: 
+                                                        {% if doc.certificado_hash|length == 66 and doc.certificado_hash|slice:":2" == "0x" %}
+                                                            <a href="{% url 'verificar_certificado_blockchain' %}?hash={{ doc.certificado_hash }}" target="_blank" title="Verificar transacción en la blockchain">
+                                                                {{ doc.certificado_hash|truncatechars:20 }}
+                                                                <i class="fas fa-external-link-alt fa-xs"></i>
+                                                            </a>
+                                                        {% else %}
+                                                            <span class="text-warning" title="Hash con formato incorrecto - no se puede verificar">
+                                                                {{ doc.certificado_hash|truncatechars:20 }}
+                                                                <i class="fas fa-exclamation-triangle fa-xs"></i>
+                                                            </span>
+                                                        {% endif %}
+                                                    </small>
+                                                </div>
+                                            {% elif doc.certificado_hash and not user.is_superuser %}
+                                                <div class="mt-2">
+                                                    <small class="text-success fw-bold">
+                                                        <i class="fas fa-check-circle"></i> Certificado en Blockchain
+                                                    </small>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-lock"></i> Hash disponible solo para administradores
+                                                    </small>
+                                                </div>
+                                            {% endif %}
+                                            
+                                            <!-- Botones de certificado para documentos de titulación -->
+                                            {% if user.is_superuser and alumno.curp and doc.estado_revision == 'aprobado' %}
+                                                {% if doc.certificado_hash %}
+                                                    <a href="{% url 'ver_certificado_documento' doc.id 'academico' %}" class="btn btn-sm btn-success me-2" title="Ver Certificado Blockchain">
+                                                        <i class="fas fa-certificate"></i> Ver Cert.
+                                                    </a>
+                                                {% else %}
+                                                    <a href="{% url 'generar_certificado_documento' doc.id 'academico' %}" class="btn btn-sm btn-outline-success me-2" title="Generar Certificado Blockchain">
+                                                        <i class="fas fa-certificate"></i> Certificar
+                                                    </a>
+                                                {% endif %}
+                                            {% elif user.is_superuser and alumno.curp and doc.estado_revision != 'aprobado' %}
+                                                <span class="btn btn-sm btn-outline-secondary disabled me-2" title="El documento debe estar aprobado para poder certificarlo">
+                                                    <i class="fas fa-lock"></i> No Aprobado
+                                                </span>
+                                            {% elif user.is_superuser and not alumno.curp %}
+                                                <span class="btn btn-sm btn-outline-warning disabled me-2" title="El alumno debe tener CURP para poder certificar">
+                                                    <i class="fas fa-exclamation-triangle"></i> Sin CURP
+                                                </span>
+                                            {% endif %}
+
+                                            <!-- Botones de Revisión para documentos de titulación -->
+                                            {% if user.is_superuser %}
+                                                {% if doc.estado_revision != 'aprobado' %}
+                                                    <a href="{% url 'revisar_documento_academico' doc.id %}" class="btn btn-sm btn-outline-info me-2" title="Revisar, aprobar o rechazar documento">
+                                                        <i class="fas fa-check-double"></i> Revisar
+                                                    </a>
+                                                {% endif %}
+
+                                                <!-- Botón Aprobar Rápido -->
+                                                {% if doc.estado_revision != 'aprobado' %}
+                                                    <form method="post" action="{% url 'revisar_documento_academico' doc.id %}" style="display:inline;">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="accion" value="aprobar">
+                                                        <input type="hidden" name="comentarios" value="Aprobado automáticamente">
+                                                        <button type="submit" class="btn btn-sm btn-success me-2" title="Aprobar documento inmediatamente">
+                                                            <i class="fas fa-check"></i> Aprobar
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+
+                                                <!-- Botón Rechazar Rápido -->
+                                                {% if doc.estado_revision != 'rechazado' %}
+                                                    <button type="button" class="btn btn-sm btn-danger me-2" data-bs-toggle="modal" data-bs-target="#rechazarModalTitulacion{{ doc.id }}" title="Rechazar documento">
+                                                        <i class="fas fa-times"></i> Rechazar
+                                                    </button>
+                                                {% endif %}
+
+                                                <!-- Botón Eliminar -->
+                                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarModalTitulacion{{ doc.id }}" title="Eliminar documento">
+                                                    <i class="fas fa-trash"></i> Eliminar
+                                                </button>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="text-muted fst-italic me-2">No subido</span>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-folder-open fa-2x text-muted mb-3"></i>
+                            <h5>No hay documentos de titulación</h5>
+                            <p class="text-muted">
+                                El alumno aún no ha subido documentos relacionados con su trámite de titulación (ej. Título, Cédula, etc.).
+                            </p>
+                            <a href="{% url 'subir_documento_titulacion_alumno' alumno.id %}" class="btn btn-primary">
+                                <i class="fas fa-upload"></i> Subir Documento de Titulación
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <!-- Modales para documentos de titulación -->
+                    {% if documentos_titulacion %}
+                        {% for doc in documentos_titulacion %}
+                            <!-- Modal para rechazar documento de titulación -->
+                            {% if user.is_superuser %}
+                            <div class="modal fade" id="rechazarModalTitulacion{{ doc.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Rechazar Documento de Titulación</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form method="post" action="{% url 'revisar_documento_academico' doc.id %}">
+                                            {% csrf_token %}
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="comentarios{{ doc.id }}" class="form-label">Motivo del Rechazo (requerido)</label>
+                                                    <textarea class="form-control" id="comentarios{{ doc.id }}" name="comentarios" rows="4" placeholder="Explique por qué se rechaza el documento..." required></textarea>
+                                                    <small class="text-muted">El alumno verá este comentario cuando consulte el estado de su documento.</small>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="submit" name="accion" value="rechazar" class="btn btn-danger">
+                                                    <i class="fas fa-times"></i> Rechazar Documento
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal para eliminar documento de titulación -->
+                            <div class="modal fade" id="eliminarModalTitulacion{{ doc.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Confirmar Eliminación</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Está seguro de que desea eliminar el documento de titulación "{{ doc.get_tipo_documento_display }}"?<br>
+                                            <small class="text-muted">Esta acción no se puede deshacer.</small>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form method="post" action="{% url 'eliminar_documento_academico' doc.id %}" style="display: inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Documentos personales -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0"><i class="fas fa-file-alt"></i> Documentos Personales</h5>
+                    <a href="{% url 'subir_documento_personal_alumno' alumno.id %}" class="btn btn-sm btn-success">
+                        <i class="fas fa-upload"></i> Subir Documento Personal
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if documentos_personales %}
+                        <div class="row">
+                            {% for documento in documentos_personales %}
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <i class="fas fa-file-alt text-info"></i>
+                                                {{ documento.nombre_documento }}
+                                            </h6>
+                                            <p class="card-text small">{{ documento.descripcion|truncatechars:100 }}</p>
+                                            <div class="mb-2">
+                                                <span class="badge bg-info">{{ documento.categoria.nombre }}</span>
+                                                {% if documento.estado == 'aprobado' %}
+                                                    <span class="badge bg-success">Aprobado</span>
+                                                {% elif documento.estado == 'rechazado' %}
+                                                    <span class="badge bg-danger">Rechazado</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning">Pendiente</span>
+                                                {% endif %}
+                                            </div>
+                                            <small class="text-muted">
+                                                Subido: {{ documento.fecha_subida|date:"d/m/Y" }}
+                                                {% if documento.fecha_vencimiento %}
+                                                    <br>Vence: {{ documento.fecha_vencimiento|date:"d/m/Y" }}
+                                                    {% if documento.esta_vencido %}
+                                                        <span class="text-danger fw-bold">(VENCIDO)</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </small>
+                                            
+                                            <!-- Información del hash para documentos personales -->
+                                            {% if documento.certificado_hash and user.is_superuser %}
+                                                <div class="mt-2">
+                                                    <small class="text-success fw-bold">
+                                                        <i class="fas fa-check-circle"></i> Certificado en Blockchain
+                                                    </small>
+                                                    <br>
+                                                    <small class="text-muted" style="font-size: 0.75em; word-break: break-all;">
+                                                        Hash: 
+                                                        {% if documento.certificado_hash|length == 66 and documento.certificado_hash|slice:":2" == "0x" %}
+                                                            <a href="{% url 'verificar_certificado_blockchain' %}?hash={{ documento.certificado_hash }}" target="_blank" title="Verificar transacción en la blockchain">
+                                                                {{ documento.certificado_hash|truncatechars:20 }}
+                                                                <i class="fas fa-external-link-alt fa-xs"></i>
+                                                            </a>
+                                                        {% else %}
+                                                            <span class="text-warning" title="Hash con formato incorrecto - no se puede verificar">
+                                                                {{ documento.certificado_hash|truncatechars:20 }}
+                                                                <i class="fas fa-exclamation-triangle fa-xs"></i>
+                                                            </span>
+                                                        {% endif %}
+                                                    </small>
+                                                </div>
+                                            {% elif documento.certificado_hash and not user.is_superuser %}
+                                                <div class="mt-2">
+                                                    <small class="text-success fw-bold">
+                                                        <i class="fas fa-check-circle"></i> Certificado en Blockchain
+                                                    </small>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-lock"></i> Hash disponible solo para administradores
+                                                    </small>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-footer">
+                                            {% if documento.archivo %}
+                                                <!-- Botón Ver Documento -->
+                                                <a href="{{ documento.archivo.url }}" target="_blank" class="btn btn-sm btn-outline-primary me-1" title="Ver documento completo">
+                                                    <i class="fas fa-eye"></i> Ver
+                                                </a>
+
+                                                <!-- Botón Editar (solo para el alumno o superusuarios) -->
+                                                {% if user.is_superuser or user == alumno.usuario %}
+                                                    <a href="{% url 'editar_documento' documento.id %}" class="btn btn-sm btn-outline-warning me-1" title="Editar información del documento">
+                                                        <i class="fas fa-edit"></i> Editar
+                                                    </a>
+                                                {% endif %}
+
+                                                <!-- Botones de Revisión (solo para superusuarios) -->
+                                                {% if user.is_superuser %}
+                                                    {% if documento.estado != 'aprobado' %}
+                                                        <!-- Botón de Revisar -->
+                                                        <a href="{% url 'revisar_documento_personal' documento.id %}" class="btn btn-sm btn-outline-info me-1" title="Revisar, aprobar o rechazar documento">
+                                                            <i class="fas fa-check-double"></i> Revisar
+                                                        </a>
+                                                    {% endif %}
+
+                                                    <!-- Botón Aprobar Rápido -->
+                                                    {% if documento.estado != 'aprobado' %}
+                                                        <form method="post" action="{% url 'revisar_documento_personal' documento.id %}" style="display:inline;">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="accion" value="aprobar">
+                                                            <input type="hidden" name="observaciones" value="">
+                                                            <button type="submit" class="btn btn-sm btn-success me-1" title="Aprobar documento inmediatamente">
+                                                                <i class="fas fa-check"></i> Aprobar
+                                                            </button>
+                                                        </form>
+                                                    {% endif %}
+
+                                                    <!-- Botón Rechazar Rápido -->
+                                                    {% if documento.estado != 'rechazado' %}
+                                                        <button type="button" class="btn btn-sm btn-danger me-1" data-bs-toggle="modal" data-bs-target="#rechazarModalPersonal{{ documento.id }}" title="Rechazar documento">
+                                                            <i class="fas fa-times"></i> Rechazar
+                                                        </button>
+                                                    {% endif %}
+                                                {% endif %}
+
+                                                <!-- Botón Certificado Blockchain -->
+                                                {% if user.is_superuser and alumno.curp and documento.estado == 'aprobado' %}
+                                                    {% if documento.certificado_hash %}
+                                                        <a href="{% url 'ver_certificado_documento' documento.id 'personal' %}" class="btn btn-sm btn-success me-1" title="Ver Certificado Blockchain">
+                                                            <i class="fas fa-certificate"></i> Ver Cert.
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="{% url 'generar_certificado_documento' documento.id 'personal' %}" class="btn btn-sm btn-outline-success me-1" title="Generar Certificado Blockchain">
+                                                            <i class="fas fa-certificate"></i> Certificar
+                                                        </a>
+                                                    {% endif %}
+                                                {% elif user.is_superuser and alumno.curp and documento.estado != 'aprobado' %}
+                                                    <span class="btn btn-sm btn-outline-secondary disabled me-1" title="El documento debe estar aprobado para poder certificarlo">
+                                                        <i class="fas fa-lock"></i> No Aprobado
+                                                    </span>
+                                                {% endif %}
+
+                                                <!-- Botón Eliminar (solo para superusuarios) -->
+                                                {% if user.is_superuser %}
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarModalPersonal{{ documento.id }}" title="Eliminar documento">
+                                                        <i class="fas fa-trash"></i> Eliminar
+                                                    </button>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Modales para documentos personales -->
+                        {% if documentos_personales %}
+                            {% for documento in documentos_personales %}
+                                <!-- Modal para rechazar documento personal -->
+                                {% if user.is_superuser %}
+                                <div class="modal fade" id="rechazarModalPersonal{{ documento.id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Rechazar Documento Personal</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <form method="post" action="{% url 'revisar_documento_personal' documento.id %}">
+                                                {% csrf_token %}
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label for="observaciones{{ documento.id }}" class="form-label">Motivo del Rechazo (requerido)</label>
+                                                        <textarea class="form-control" id="observaciones{{ documento.id }}" name="observaciones" rows="4" placeholder="Explique por qué se rechaza el documento..." required></textarea>
+                                                        <small class="text-muted">El alumno verá este comentario cuando consulte el estado de su documento.</small>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <button type="submit" name="accion" value="rechazar" class="btn btn-danger">
+                                                        <i class="fas fa-times"></i> Rechazar Documento
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal para eliminar documento personal -->
+                                <div class="modal fade" id="eliminarModalPersonal{{ documento.id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Confirmar Eliminación</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Está seguro de que desea eliminar el documento personal "{{ documento.nombre_documento }}"?<br>
+                                                <small class="text-muted">Esta acción no se puede deshacer.</small>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                <form method="post" action="{% url 'eliminar_documento' documento.id %}" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-folder-open fa-2x text-muted mb-3"></i>
+                            <h5>No hay documentos personales registrados</h5>
+                            <p class="text-muted">El alumno aún no ha subido documentos personales.</p>
+                            <a href="{% url 'subir_documento_personal_alumno' alumno.id %}" class="btn btn-primary">
+                                <i class="fas fa-upload"></i> Subir Primer Documento Personal
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function resetPassword(userId) {
+    if (confirm('¿Está seguro de que desea restablecer la contraseña de este usuario? Se generará una nueva contraseña temporal.')) {
+        // Aquí puedes agregar la lógica para restablecer la contraseña
+        // Por ahora solo mostramos un mensaje
+        alert('Funcionalidad de restablecimiento de contraseña próximamente disponible.');
+    }
+}
+
+function togglePasswordVisibility() {
+    const passwordDisplay = document.getElementById('password-display');
+    const passwordEye = document.getElementById('password-eye');
+
+    if (passwordDisplay.textContent === '12345678') {
+        passwordDisplay.textContent = '••••••••';
+        passwordEye.className = 'fas fa-eye';
+    } else {
+        passwordDisplay.textContent = '12345678';
+        passwordEye.className = 'fas fa-eye-slash';
+    }
+}
+
+</script>
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}

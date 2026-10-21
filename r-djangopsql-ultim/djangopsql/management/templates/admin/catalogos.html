@@ -1,0 +1,481 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Gestión de Catálogos{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1><i class="fas fa-sliders-h"></i> Centro de Administración</h1>
+                    <p class="text-muted">Gestiona todos los catálogos y configuraciones del sistema.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary btn-lg" data-bs-toggle="offcanvas" data-bs-target="#adminOffcanvas" aria-controls="adminOffcanvas">
+                        <i class="fas fa-bars"></i> Menú Rápido
+                    </button>
+                    <a href="{% url 'homeP' %}" class="btn btn-primary btn-lg"><i class="fas fa-home"></i> Inicio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 1: Datos Académicos -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="mb-3">
+                <h3><i class="fas fa-graduation-cap text-success"></i> Datos Académicos</h3>
+                <hr>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-school"></i> Carreras</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Administra las carreras ofrecidas en la institución.</p>
+                    <small class="text-muted mb-3">
+                        <i class="fas fa-check"></i> Crear/Editar carreras
+                        <br><i class="fas fa-check"></i> Activar/Desactivar
+                        <br><i class="fas fa-check"></i> Ver semestres
+                    </small>
+                    <a href="{% url 'gestionar_carreras_admin' %}" class="btn btn-success mt-auto"><i class="fas fa-cog"></i> Ir a Carreras</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-book"></i> Materias</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Gestiona materias y asócilas a carreras.</p>
+                    <small class="text-muted mb-3">
+                        <i class="fas fa-check"></i> Crear/Editar materias
+                        <br><i class="fas fa-check"></i> Asignar créditos
+                        <br><i class="fas fa-check"></i> Asociar carrera/semestre
+                    </small>
+                    <a href="{% url 'gestionar_materias' %}" class="btn btn-primary mt-auto"><i class="fas fa-cog"></i> Ir a Materias</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-secondary">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="fas fa-map-marker-alt"></i> Instituciones</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Gestiona escuelas de procedencia de alumnos.</p>
+                    <small class="text-muted mb-3">
+                        <i class="fas fa-check"></i> Crear instituciones
+                        <br><i class="fas fa-check"></i> Editar información
+                        <br><i class="fas fa-check"></i> Gestionar estados
+                    </small>
+                    <a href="{% url 'gestionar_instituciones_procedencia' %}" class="btn btn-secondary mt-auto"><i class="fas fa-cog"></i> Ir a Instituciones</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 2: Documentos -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="mb-3">
+                <h3><i class="fas fa-file-alt text-primary"></i> Gestión de Documentos</h3>
+                <hr>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-folder"></i> Categorías de Documentos</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Define tipos de documentos que pueden subirse.</p>
+                    <small class="text-muted mb-3">
+                        <i class="fas fa-check"></i> Documentos personales
+                        <br><i class="fas fa-check"></i> Documentos académicos
+                        <br><i class="fas fa-check"></i> Documentos de titulación
+                    </small>
+                    <a href="{% url 'gestionar_categorias_documentos' %}" class="btn btn-primary mt-auto"><i class="fas fa-cog"></i> Ir a Categorías</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-file-upload"></i> Gestión Centralizada</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Visualiza y gestiona todos los documentos del sistema.</p>
+                    <small class="text-muted mb-3">
+                        <i class="fas fa-check"></i> Ver todos los documentos
+                        <br><i class="fas fa-check"></i> Filtrar por tipo
+                        <br><i class="fas fa-check"></i> Cambiar estados
+                    </small>
+                    <a href="{% url 'gestionar_documentos_unificado' %}" class="btn btn-info mt-auto"><i class="fas fa-cog"></i> Ir a Documentos</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-file-import"></i> Documentos Personales</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Revisa y aprueba documentos de identidad.</p>
+                    <small class="text-muted mb-3">
+                        <i class="fas fa-check"></i> Documentos pendientes
+                        <br><i class="fas fa-check"></i> Aprobar/Rechazar
+                        <br><i class="fas fa-check"></i> Ver detalles
+                    </small>
+                    <a href="{% url 'gestionar_documentos_personales' %}" class="btn btn-success mt-auto"><i class="fas fa-cog"></i> Ir a Personales</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-graduation-cap"></i> Documentos Académicos</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Gestiona documentos académicos de estudiantes.</p>
+                    <small class="text-muted mb-3">
+                        <i class="fas fa-check"></i> Calificaciones
+                        <br><i class="fas fa-check"></i> Certificados
+                        <br><i class="fas fa-check"></i> Historial académico
+                    </small>
+                    <a href="{% url 'gestionar_documentos_academicos' %}" class="btn btn-warning mt-auto"><i class="fas fa-cog"></i> Ir a Académicos</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-dark">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-certificate"></i> Documentos de Titulación</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Gestiona documentos relacionados con la titulación.</p>
+                    <small class="text-muted mb-3">
+                        <i class="fas fa-check"></i> Documentos de tesis
+                        <br><i class="fas fa-check"></i> Expedientes
+                        <br><i class="fas fa-check"></i> Comprobantes
+                    </small>
+                    <a href="{% url 'listar_documentos_titulacion' %}" class="btn btn-dark mt-auto"><i class="fas fa-cog"></i> Ir a Titulación</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 3: Seguridad y Acceso (AL FINAL) -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="mb-3">
+                <h3><i class="fas fa-lock text-danger"></i> Seguridad y Acceso</h3>
+                <hr>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fas fa-users"></i> Gestión de Usuarios</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Crea, edita, elimina y gestiona usuarios del sistema.</p>
+                    <small class="text-muted mb-3">
+                        <i class="fas fa-check"></i> Crear/Editar/Desactivar
+                        <br><i class="fas fa-check"></i> Cambiar contraseñas
+                        <br><i class="fas fa-check"></i> Asignar perfiles
+                        <br><i class="fas fa-check"></i> Exportar datos
+                    </small>
+                    <a href="{% url 'gestionar_usuarios' %}" class="btn btn-danger mt-auto"><i class="fas fa-cog"></i> Ir a Usuarios</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-user-tag"></i> Perfiles y Permisos</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Define roles de usuario y asigna permisos de acceso.</p>
+                    <small class="text-muted mb-3">
+                        <i class="fas fa-check"></i> Crear perfiles
+                        <br><i class="fas fa-check"></i> Gestionar permisos
+                        <br><i class="fas fa-check"></i> Asociar módulos
+                    </small>
+                    <a href="{% url 'gestionar_perfiles' %}" class="btn btn-warning mt-auto"><i class="fas fa-cog"></i> Ir a Perfiles</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-bars"></i> Menús del Sistema</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text">Gestiona módulos y menús de navegación.</p>
+                    <small class="text-muted mb-3">
+                        <i class="fas fa-check"></i> Crear módulos
+                        <br><i class="fas fa-check"></i> Crear submódulos
+                        <br><i class="fas fa-check"></i> Activar/Desactivar
+                    </small>
+                    <a href="{% url 'pageMenu' %}" class="btn btn-info mt-auto"><i class="fas fa-cog"></i> Ir a Menús</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 4: Información Rápida -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="alert alert-info alert-dismissible fade show">
+                <h5><i class="fas fa-info-circle"></i> Información de Acceso</h5>
+                <ul class="mb-0">
+                    <li><strong>Solo Administradores:</strong> Todas estas opciones están disponibles únicamente para usuarios con permisos de administrador (superusuario).</li>
+                    <li><strong>Seguridad:</strong> Todos los cambios son registrados y validados en el servidor.</li>
+                    <li><strong>Datos:</strong> Los datos no se eliminan, solo se desactivan cuando es posible.</li>
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    .card {
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.15) !important;
+    }
+    
+    .card-header {
+        border-bottom: 3px solid rgba(0,0,0,0.1);
+    }
+    
+    .card-header h5 {
+        font-weight: 600;
+    }
+    
+    hr {
+        margin: 1rem 0;
+        opacity: 0.2;
+    }
+    
+    h1 {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    h3 {
+        font-weight: 600;
+        margin-top: 1rem;
+    }
+    
+    /* Estilos para Offcanvas Mejorado */
+    .offcanvas {
+        width: 350px !important;
+    }
+    
+    @media (max-width: 576px) {
+        .offcanvas {
+            width: 100% !important;
+        }
+    }
+    
+    .offcanvas-header {
+        padding: 1.5rem !important;
+        border-bottom: 3px solid rgba(255,255,255,0.2) !important;
+    }
+    
+    .offcanvas-header h5 {
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    
+    .offcanvas-header small {
+        display: block;
+        margin-top: 0.25rem;
+        font-size: 0.8rem;
+    }
+    
+    .offcanvas-body {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+    
+    .offcanvas-body > div:last-child {
+        margin-top: auto;
+    }
+    
+    .offcanvas .btn-outline-success:hover,
+    .offcanvas .btn-outline-primary:hover,
+    .offcanvas .btn-outline-secondary:hover,
+    .offcanvas .btn-outline-info:hover,
+    .offcanvas .btn-outline-warning:hover,
+    .offcanvas .btn-outline-danger:hover,
+    .offcanvas .btn-outline-dark:hover {
+        background-color: transparent;
+        border-color: inherit;
+        color: inherit;
+    }
+    
+    .offcanvas .btn-outline-success:hover {
+        background-color: #198754 !important;
+        border-color: #198754 !important;
+        color: white !important;
+    }
+    
+    .offcanvas .btn-outline-primary:hover {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+    }
+    
+    .offcanvas .btn-outline-secondary:hover {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: white !important;
+    }
+    
+    .offcanvas .btn-outline-info:hover {
+        background-color: #0dcaf0 !important;
+        border-color: #0dcaf0 !important;
+        color: black !important;
+    }
+    
+    .offcanvas .btn-outline-warning:hover {
+        background-color: #ffc107 !important;
+        border-color: #ffc107 !important;
+        color: black !important;
+    }
+    
+    .offcanvas .btn-outline-danger:hover {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+        color: white !important;
+    }
+    
+    .offcanvas .btn-outline-dark:hover {
+        background-color: #212529 !important;
+        border-color: #212529 !important;
+        color: white !important;
+    }
+    
+    .transition-all {
+        transition: all 0.3s ease !important;
+    }
+    
+    .offcanvas .btn-sm {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    .offcanvas h6 {
+        color: inherit;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .offcanvas .border-top {
+        background-color: white;
+    }
+    
+    .offcanvas .btn-primary {
+        background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+        border: none;
+    }
+    
+    .offcanvas .btn-primary:hover {
+        background: linear-gradient(135deg, #0b5ed7 0%, #0a58ca 100%);
+    }
+</style>
+<!-- Offcanvas Mejorado - Menú de Acceso Rápido -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="adminOffcanvas" aria-labelledby="adminOffcanvasLabel">
+    <div class="offcanvas-header bg-gradient" style="background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);">
+        <div>
+            <h5 class="offcanvas-title text-white mb-0" id="adminOffcanvasLabel">
+                <i class="fas fa-sliders-h me-2"></i> Acceso Rápido
+            </h5>
+            <small class="text-light opacity-75">Centro de Administración</small>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0" style="background-color: #f8f9fa;">
+        <!-- Sección: Datos Académicos -->
+        <div class="p-4 border-bottom">
+            <h6 class="text-uppercase fw-bold text-success mb-3" style="letter-spacing: 0.5px;">
+                <i class="fas fa-graduation-cap me-2"></i> Datos Académicos
+            </h6>
+            <div class="d-flex flex-column gap-2">
+                <a href="{% url 'gestionar_carreras_admin' %}" class="btn btn-outline-success btn-sm fw-500 transition-all">
+                    <i class="fas fa-school me-2"></i> Carreras
+                </a>
+                <a href="{% url 'gestionar_materias' %}" class="btn btn-outline-primary btn-sm fw-500 transition-all">
+                    <i class="fas fa-book me-2"></i> Materias
+                </a>
+                <a href="{% url 'gestionar_instituciones_procedencia' %}" class="btn btn-outline-secondary btn-sm fw-500 transition-all">
+                    <i class="fas fa-map-marker-alt me-2"></i> Instituciones
+                </a>
+            </div>
+        </div>
+
+        <!-- Sección: Documentos -->
+        <div class="p-4 border-bottom">
+            <h6 class="text-uppercase fw-bold text-primary mb-3" style="letter-spacing: 0.5px;">
+                <i class="fas fa-file-alt me-2"></i> Documentos
+            </h6>
+            <div class="d-flex flex-column gap-2">
+                <a href="{% url 'gestionar_categorias_documentos' %}" class="btn btn-outline-primary btn-sm fw-500 transition-all">
+                    <i class="fas fa-folder me-2"></i> Categorías
+                </a>
+                <a href="{% url 'gestionar_documentos_unificado' %}" class="btn btn-outline-info btn-sm fw-500 transition-all">
+                    <i class="fas fa-file-upload me-2"></i> Gestión Centralizada
+                </a>
+                <a href="{% url 'gestionar_documentos_personales' %}" class="btn btn-outline-success btn-sm fw-500 transition-all">
+                    <i class="fas fa-user-circle me-2"></i> Personales
+                </a>
+                <a href="{% url 'gestionar_documentos_academicos' %}" class="btn btn-outline-warning btn-sm fw-500 transition-all">
+                    <i class="fas fa-graduation-cap me-2"></i> Académicos
+                </a>
+                <a href="{% url 'listar_documentos_titulacion' %}" class="btn btn-outline-dark btn-sm fw-500 transition-all">
+                    <i class="fas fa-certificate me-2"></i> Titulación
+                </a>
+            </div>
+        </div>
+
+        <!-- Sección: Seguridad y Acceso -->
+        <div class="p-4 border-bottom">
+            <h6 class="text-uppercase fw-bold text-danger mb-3" style="letter-spacing: 0.5px;">
+                <i class="fas fa-lock me-2"></i> Seguridad y Acceso
+            </h6>
+            <div class="d-flex flex-column gap-2">
+                <a href="{% url 'gestionar_usuarios' %}" class="btn btn-outline-danger btn-sm fw-500 transition-all">
+                    <i class="fas fa-users me-2"></i> Usuarios
+                </a>
+                <a href="{% url 'gestionar_perfiles' %}" class="btn btn-outline-warning btn-sm fw-500 transition-all">
+                    <i class="fas fa-user-tag me-2"></i> Perfiles
+                </a>
+                <a href="{% url 'pageMenu' %}" class="btn btn-outline-info btn-sm fw-500 transition-all">
+                    <i class="fas fa-bars me-2"></i> Menús
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-4 mt-auto border-top">
+            <a href="{% url 'homeP' %}" class="btn btn-primary btn-sm w-100 fw-500">
+                <i class="fas fa-arrow-left me-2"></i> Volver al Inicio
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

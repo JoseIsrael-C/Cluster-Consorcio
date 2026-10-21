@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Gestión de Menús y Módulos{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2><i class="fas fa-bars"></i> Gestión de Menús y Módulos</h2>
+                <div>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalModulo">
+                        <i class="fas fa-plus"></i> Nuevo Módulo
+                    </button>
+                    <a href="{% url 'ct_catalogos' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver</a>
+                    <a href="{% url 'homeP' %}" class="btn btn-primary"><i class="fas fa-home"></i> Inicio</a>
+                </div>
+            </div>
+            <p class="text-muted">Administra los módulos y submenús del sistema.</p>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Sección de Módulos -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-cube"></i> Módulos del Sistema</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>URL</th>
+                            <th>Perfiles Asociados</th>
+                            <th>Estado</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for modulo in modulos %}
+                            <tr>
+                                <td><small>#{{ modulo.id }}</small></td>
+                                <td><strong>{{ modulo.nombre }}</strong></td>
+                                <td><code>{{ modulo.url|default:"Sin URL" }}</code></td>
+                                <td>
+                                    {% if modulo.id_perfil_fk.all %}
+                                        {% for perfil in modulo.id_perfil_fk.all %}
+                                            <span class="badge bg-info">{{ perfil.nombre }}</span>
+                                        {% endfor %}
+                                    {% else %}
+                                        <span class="badge bg-secondary">Sin Perfiles</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if modulo.borrado %}
+                                        <span class="badge bg-success"><i class="fas fa-check-circle"></i> Activo</span>
+                                    {% else %}
+                                        <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Inactivo</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if modulo.borrado %}
+                                        <a href="{% url 'eliminar_modulo' modulo.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Desactivar este módulo?');">
+                                            <i class="fas fa-ban"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'activar_modulo' modulo.id %}" class="btn btn-sm btn-success" onclick="return confirm('¿Activar este módulo?');">
+                                            <i class="fas fa-redo"></i>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="fas fa-inbox"></i> No hay módulos registrados.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Submódulos -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-sitemap"></i> Submódulos</h5>
+                <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modalSubModulo">
+                    <i class="fas fa-plus"></i> Nuevo Submódulo
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>URL</th>
+                            <th>Módulo Padre</th>
+                            <th>Estado</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for submodulo in subModulos %}
+                            <tr>
+                                <td><small>#{{ submodulo.id }}</small></td>
+                                <td><strong>{{ submodulo.nombre }}</strong></td>
+                                <td><code>{{ submodulo.url|default:"Sin URL" }}</code></td>
+                                <td>{{ submodulo.id_modulo_fk.nombre|default:"Sin módulo" }}</td>
+                                <td>
+                                    {% if submodulo.borrado %}
+                                        <span class="badge bg-success"><i class="fas fa-check-circle"></i> Activo</span>
+                                    {% else %}
+                                        <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Inactivo</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if submodulo.borrado %}
+                                        <a href="{% url 'eliminar_submodulo' submodulo.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Desactivar este submódulo?');">
+                                            <i class="fas fa-ban"></i>
+                                        </a>
+                                    {% else %}
+                                        <button class="btn btn-sm btn-success" disabled>
+                                            <i class="fas fa-check"></i> Inactivo
+                                        </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="fas fa-inbox"></i> No hay submódulos registrados.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Crear Módulo -->
+<div class="modal fade" id="modalModulo" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Nuevo Módulo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{% url 'crear_menu' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {{ formaMenu.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Crear Submódulo -->
+<div class="modal fade" id="modalSubModulo" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Nuevo Submódulo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{% url 'crear_submenu' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {{ formaSubMenu.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}

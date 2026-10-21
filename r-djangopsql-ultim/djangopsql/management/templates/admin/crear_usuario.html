@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Crear Nuevo Usuario{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2><i class="fas fa-user-plus"></i> Crear Nuevo Usuario</h2>
+                <div>
+                    <a href="{% url 'gestionar_usuarios' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver a Gestión de Usuarios</a>
+                </div>
+            </div>
+            <p class="text-muted">Solo los administradores pueden crear nuevos usuarios.</p>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post" action="{% url 'crear_usuario' %}">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="username" class="form-label">Nombre de Usuario <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="username" name="username" required placeholder="ej: juan.perez">
+                    <small class="text-muted">Debe ser único en el sistema.</small>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="ej: usuario@example.com">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="password" class="form-label">Contraseña <span class="text-danger">*</span></label>
+                        <input type="password" class="form-control" id="password" name="password" required minlength="8" placeholder="Mínimo 8 caracteres">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="confirmar_password" class="form-label">Confirmar Contraseña <span class="text-danger">*</span></label>
+                        <input type="password" class="form-control" id="confirmar_password" name="confirmar_password" required minlength="8" placeholder="Confirma la contraseña">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="perfil" class="form-label">Perfil (Opcional)</label>
+                    <select class="form-select" id="perfil" name="perfil">
+                        <option value="">-- Sin Perfil --</option>
+                        {% for perfil in perfiles %}
+                            <option value="{{ perfil.id }}">{{ perfil.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="text-muted">Puedes asignar un perfil ahora o después desde la gestión de usuarios.</small>
+                </div>
+
+                <div class="alert alert-info small mt-4">
+                    <i class="fas fa-shield-alt"></i> <strong>Nota de Seguridad:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Las contraseñas deben tener mínimo 8 caracteres</li>
+                        <li>Los nombres de usuario deben ser únicos</li>
+                        <li>Se recomienda usar contraseñas fuertes (letras, números y caracteres especiales)</li>
+                    </ul>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a href="{% url 'gestionar_usuarios' %}" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Crear Usuario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}

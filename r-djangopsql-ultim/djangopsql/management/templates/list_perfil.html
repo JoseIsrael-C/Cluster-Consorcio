@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} catalogos {% endblock %}
+
+{% block content %}
+
+    <!-- tabla -->
+    <div class="row mt-5">
+        <div class="col-sm-10">
+            <h3>Perfiles </h3>
+        </div>
+        <div class="col-md-2 d-flex justify-content-end">
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#modalInsert" >
+                +
+            </button>
+        </div>
+    </div>
+    <!-- tabla -->
+    <table class="table table-hover mt-4 me-0 ">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Activo</th>
+                <th scope="col">Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for perfil in perfils %}
+                <tr>
+                    <th scope="row">{{ perfil.id }}</th>
+                    <td>{{ perfil.nombre }}</td>
+                    <td>
+                        {% if perfil.borrado %}
+                            Activo
+                        {% else %}
+                            desactivado
+                        {% endif %}
+                        <!--{{ puesto.borrado }}-->
+                    </td>
+                    <td>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <form action="{% url 'deletePerfil' perfil.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button class="btn">-</button>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <form action="{% url 'updatePerfil' perfil.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button class="btn" >Editar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <h5> sin perfiles </h5>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="row mb-2">
+        <div class="col-10">
+            <h5>Modulos</h5>
+        </div>
+        <div class="col-2 d-flex justify-content-end">
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#insertModulos" >
+                +
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Relacionado</th>
+                    <th scope="col">Activo</th>
+                    <th scope="col">Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for modulo in modulos %}
+                    <tr>
+                        <th scope="row">{{ modulo.id }}</th>
+                        <td>{{ modulo.nombre }}</td>
+                        <td>{{ modulo. }}</td>
+                        <td>
+                            {% if modulo.borrado %}
+                                Activo
+                            {% else %}
+                                desactivado
+                            {% endif %}
+                            <!--{{ puesto.borrado }}-->
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <form action="{% url 'deleteModulo' modulo.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn">-</button>
+                                    </form>
+                                </div>
+                                <div class="col-md-2">
+                                    <form action="{% url 'editModulo' modulo.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn" >Editar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <h5> sin modulos </h5>
+                {% endfor %}
+                
+            </tbody>
+        </table>
+    </div>
+    <div class="row mb-2">
+        <div class="col-10">
+            <h5>Puestos</h5>
+        </div>
+        <div class="col-2 d-flex justify-content-end">
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#insertPuesto" >
+                +
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">activo</th>
+                    <th scope="col">Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for puesto in puestos %}
+                    <tr>
+                        <th scope="row">{{ puesto.id }}</th>
+                        <td>{{ puesto.nombre }}</td>
+                        <td>
+                            {% if puesto.borrado %}
+                                Activo
+                            {% else %}
+                                desactivado
+                            {% endif %}
+                            <!--{{ puesto.borrado }}-->
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <form action="{% url 'deletePuesto' puesto.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn">-</button>
+                                    </form>
+                                </div>
+                                <div class="col-md-2">
+                                    <form action="{% url 'editePuesto' puesto.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn" >Editar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <h5> sin puestos </h5>
+                {% endfor %}
+            
+            </tbody>
+        </table>
+    </div>
+    <!-- Modal -->
+    <!-- Modal Insertar Perfil --> 
+    <div class="modal fade" id="modalInsert" tabindex="-1" aria-labelledby="exampleModalLabel" 
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar perfil</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" 
+                        aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'new_perfil' %}" method="POST">
+        
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" placeholder="sub Gerente"
+                                    name="txtFPerfil" id="txtFPerfil"
+                                >
+                                <label for="txtFPerfil">nombre perfil </label>
+                            </div>
+                        </div>
+                        <!-- <p> {{ perfil }} </p> -->
+                </div>
+                <div class="modal-footer">
+                    
+                    <button class="btn btn-primary" data-bs-dismiss="modal">Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <!-- Modal insertar Modulo--> 
+    <div class="modal fade" id="insertModulos" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Modulo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'new_modulo' %}" method="POST">
+                        {% csrf_token %}
+
+                        {{ formMofulo }}
+
+                        <!--<div class="row">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" placeholder="Apartados"
+                                    name="txtFModulo" id="txtFModulo"
+                                >
+                                <label for="txtFModulo">Nombre del modulo </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control"
+                                    placeholder="www.localhost.com/catalogos"
+                                    name="txtFUrl" id="txtFUrl"
+                                >
+                                <label for="txtFUrl">URL</label>
+                            </div>
+                        </div>
+                        -->
+                        <!-- <p> {{ perfil }} </p> -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-bs-dismiss="modal">Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <!-- Modal insertar Puesto --> 
+    <div class="modal fade" id="insertPuesto" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar puesto</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'new_puesto' %}" method="POST">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" placeholder="Control escolar"
+                                    name="txtFNomPuesto" id="txtFNomPuesto"
+                                >
+                                <label for="txtFNomPuesto">Nombre del puesto </label>
+                            </div>
+                        </div>
+                        <!-- <p> {{ perfil }} </p> -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-bs-dismiss="modal">Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+{% endblock %}

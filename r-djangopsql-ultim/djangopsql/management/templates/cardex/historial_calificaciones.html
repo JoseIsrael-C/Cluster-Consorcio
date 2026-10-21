@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Historial de Calificaciones{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-chart-line"></i> Historial de Calificaciones</h2>
+                <div>
+                    <a href="{% url 'dashboard_cardex' %}" class="btn btn-secondary me-2">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                    <a href="{% url 'registrar_calificacion' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nueva Calificación
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label for="alumno" class="form-label">Alumno</label>
+                    <select class="form-select" id="alumno" name="alumno">
+                        <option value="">Todos los alumnos</option>
+                        {% for alumno in alumnos %}
+                            <option value="{{ alumno.id }}" {% if alumno_seleccionado == alumno.id|stringformat:"s" %}selected{% endif %}>
+                                {{ alumno.matricula }} - {{ alumno.nombre_completo }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="materia" class="form-label">Materia</label>
+                    <select class="form-select" id="materia" name="materia">
+                        <option value="">Todas las materias</option>
+                        {% for materia in materias %}
+                            <option value="{{ materia.id }}" {% if materia_seleccionada == materia.id|stringformat:"s" %}selected{% endif %}>
+                                {{ materia.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="estado" class="form-label">Estado</label>
+                    <select class="form-select" id="estado" name="estado">
+                        <option value="">Todos</option>
+                        <option value="aprobada" {% if estado_seleccionado == 'aprobada' %}selected{% endif %}>Aprobada</option>
+                        <option value="reprobada" {% if estado_seleccionado == 'reprobada' %}selected{% endif %}>Reprobada</option>
+                        <option value="cursando" {% if estado_seleccionado == 'cursando' %}selected{% endif %}>Cursando</option>
+                        <option value="especial" {% if estado_seleccionado == 'especial' %}selected{% endif %}>Especial</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="periodo" class="form-label">Periodo</label>
+                    <select class="form-select" id="periodo" name="periodo">
+                        <option value="">Todos los periodos</option>
+                        <option value="2025-1" {% if periodo_seleccionado == '2025-1' %}selected{% endif %}>2025-1</option>
+                        <option value="2025-2" {% if periodo_seleccionado == '2025-2' %}selected{% endif %}>2025-2</option>
+                        <option value="2024-1" {% if periodo_seleccionado == '2024-1' %}selected{% endif %}>2024-1</option>
+                        <option value="2024-2" {% if periodo_seleccionado == '2024-2' %}selected{% endif %}>2024-2</option>
+                        <option value="2023-1" {% if periodo_seleccionado == '2023-1' %}selected{% endif %}>2023-1</option>
+                        <option value="2023-2" {% if periodo_seleccionado == '2023-2' %}selected{% endif %}>2023-2</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-search"></i> Filtrar
+                    </button>
+                    <a href="{% url 'historial_calificaciones' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i> Limpiar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla de calificaciones -->
+    <div class="card">
+        <div class="card-body">
+            {% if calificaciones %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Alumno</th>
+                                <th>Matrícula</th>
+                                <th>Materia</th>
+                                <th>Calificación</th>
+                                <th>Estado</th>
+                                <th>Periodo</th>
+                                <th>Profesor</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for calificacion in calificaciones %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ calificacion.alumno.nombre_completo }}</strong>
+                                    </td>
+                                    <td>{{ calificacion.alumno.matricula }}</td>
+                                    <td>
+                                        <strong>{{ calificacion.materia.nombre }}</strong><br>
+                                        <small class="text-muted">{{ calificacion.materia.codigo_materia }}</small>
+                                    </td>
+                                    <td>
+                                        {% if calificacion.calificacion %}
+                                            <span class="badge bg-{% if calificacion.calificacion >= 8 %}success{% elif calificacion.calificacion >= 7 %}warning{% else %}danger{% endif %} fs-6">
+                                                {{ calificacion.calificacion|floatformat:1 }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if calificacion.estado == 'aprobada' or calificacion.estado == 'aprobado' %}
+                                            <span class="badge bg-success">Aprobada</span>
+                                        {% elif calificacion.estado == 'reprobada' or calificacion.estado == 'reprobado' %}
+                                            <span class="badge bg-danger">Reprobada</span>
+                                        {% elif calificacion.estado == 'cursando' %}
+                                            <span class="badge bg-warning">Cursando</span>
+                                        {% elif calificacion.estado == 'especial' %}
+                                            <span class="badge bg-info">Especial</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ calificacion.estado|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ calificacion.periodo }}</td>
+                                    <td>{{ calificacion.profesor|default:"-" }}</td>
+                                    <td>{{ calificacion.fecha_registro|date:"d/m/Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'editar_calificacion' calificacion.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Estadísticas -->
+                {% if estado_seleccionado == 'aprobada' or estado_seleccionado == 'reprobada' or estado_seleccionado == 'cursando' or estado_seleccionado == 'especial' %}
+                    <div class="alert alert-info mt-4">
+                        <i class="fas fa-filter"></i>
+                        <strong>Estadísticas Filtradas:</strong>
+                        Mostrando estadísticas del filtro aplicado.
+                    </div>
+                {% elif alumno_info %}
+                    <div class="alert alert-info mt-4">
+                        <i class="fas fa-user-graduate"></i>
+                        <strong>Estadísticas de {{ alumno_info.nombre_completo }} ({{ alumno_info.matricula }}):</strong>
+                        Mostrando estadísticas específicas del alumno seleccionado.
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mt-4">
+                        <i class="fas fa-users"></i>
+                        <strong>Estadísticas Globales:</strong>
+                        Mostrando estadísticas de todos los alumnos del sistema.
+                    </div>
+                {% endif %}
+
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h5>{{ total_calificaciones }}</h5>
+                                <p class="mb-0">Total Calificaciones</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body text-center">
+                                <h5>{{ aprobadas }}</h5>
+                                <p class="mb-0">Aprobadas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body text-center">
+                                <h5>{{ reprobadas }}</h5>
+                                <p class="mb-0">Reprobadas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body text-center">
+                                <h5>{{ cursando }}</h5>
+                                <p class="mb-0">Cursando</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-graduation-cap fa-3x text-muted mb-3"></i>
+                    <h4>No hay calificaciones registradas</h4>
+                    <p class="text-muted">Comienza registrando la primera calificación.</p>
+                    <a href="{% url 'registrar_calificacion' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Registrar Primera Calificación
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}

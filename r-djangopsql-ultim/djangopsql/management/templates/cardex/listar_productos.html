@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Lista de Productos{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-10">
+            <h2><i class="fas fa-boxes"></i> Lista de Productos</h2>
+        </div>
+        <div class="col-md-2 d-flex justify-content-end">
+            <a href="{% url 'crear_producto' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nuevo Producto
+            </a>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Filtros -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="buscar" class="form-label">Buscar Producto</label>
+                            <input type="text" class="form-control" id="buscar" name="buscar" 
+                                   placeholder="Nombre o código del producto" value="{{ request.GET.buscar }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="categoria" class="form-label">Categoría</label>
+                            <select class="form-select" id="categoria" name="categoria">
+                                <option value="">Todas las categorías</option>
+                                {% for categoria in categorias %}
+                                    <option value="{{ categoria.id }}" {% if request.GET.categoria == categoria.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ categoria.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="stock" class="form-label">Estado de Stock</label>
+                            <select class="form-select" id="stock" name="stock">
+                                <option value="">Todos</option>
+                                <option value="bajo" {% if request.GET.stock == 'bajo' %}selected{% endif %}>Bajo Stock</option>
+                                <option value="normal" {% if request.GET.stock == 'normal' %}selected{% endif %}>Stock Normal</option>
+                                <option value="alto" {% if request.GET.stock == 'alto' %}selected{% endif %}>Stock Alto</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-search"></i> Filtrar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de productos -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    {% if productos %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Producto</th>
+                                        <th>Categoría</th>
+                                        <th>Unidad</th>
+                                        <th>Precio</th>
+                                        <th>Stock Actual</th>
+                                        <th>Stock Mín/Máx</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for producto in productos %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ producto.codigo }}</strong>
+                                            </td>
+                                            <td>
+                                                <strong>{{ producto.nombre }}</strong>
+                                                {% if producto.descripcion %}
+                                                    <br><small class="text-muted">{{ producto.descripcion|truncatechars:50 }}</small>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ producto.categoria.nombre }}</td>
+                                            <td>{{ producto.get_unidad_medida_display }}</td>
+                                            <td>${{ producto.precio_unitario|floatformat:2 }}</td>
+                                            <td>
+                                                <span class="badge {% if producto.stock_actual < producto.stock_minimo %}bg-danger{% elif producto.stock_actual > producto.stock_maximo %}bg-warning{% else %}bg-success{% endif %}">
+                                                    {{ producto.stock_actual|default:0 }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">
+                                                    {{ producto.stock_minimo }} / {{ producto.stock_maximo }}
+                                                </small>
+                                            </td>
+                                            <td>
+                                                {% if producto.stock_actual < producto.stock_minimo %}
+                                                    <span class="badge bg-danger">
+                                                        <i class="fas fa-exclamation-triangle"></i> Bajo Stock
+                                                    </span>
+                                                {% elif producto.stock_actual > producto.stock_maximo %}
+                                                    <span class="badge bg-warning">
+                                                        <i class="fas fa-exclamation-circle"></i> Sobre Stock
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check"></i> Normal
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <button type="button" class="btn btn-sm btn-outline-info" 
+                                                            data-bs-toggle="modal" data-bs-target="#detalleModal{{ producto.id }}">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <a href="{% url 'registrar_movimiento' %}?producto={{ producto.id }}" 
+                                                       class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-exchange-alt"></i>
+                                                    </a>
+                                                </div>
+
+                                                <!-- Modal de detalles del producto -->
+                                                <div class="modal fade" id="detalleModal{{ producto.id }}" tabindex="-1">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Detalles del Producto</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <h6>Información General</h6>
+                                                                        <p><strong>Código:</strong> {{ producto.codigo }}</p>
+                                                                        <p><strong>Nombre:</strong> {{ producto.nombre }}</p>
+                                                                        <p><strong>Categoría:</strong> {{ producto.categoria.nombre }}</p>
+                                                                        <p><strong>Unidad de Medida:</strong> {{ producto.get_unidad_medida_display }}</p>
+                                                                        {% if producto.descripcion %}
+                                                                            <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <h6>Información de Stock</h6>
+                                                                        <p><strong>Stock Actual:</strong> 
+                                                                            <span class="badge {% if producto.stock_actual < producto.stock_minimo %}bg-danger{% elif producto.stock_actual > producto.stock_maximo %}bg-warning{% else %}bg-success{% endif %}">
+                                                                                {{ producto.stock_actual|default:0 }}
+                                                                            </span>
+                                                                        </p>
+                                                                        <p><strong>Stock Mínimo:</strong> {{ producto.stock_minimo }}</p>
+                                                                        <p><strong>Stock Máximo:</strong> {{ producto.stock_maximo }}</p>
+                                                                        <p><strong>Precio Unitario:</strong> ${{ producto.precio_unitario|floatformat:2 }}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                                <a href="{% url 'registrar_movimiento' %}?producto={{ producto.id }}" 
+                                                                   class="btn btn-primary">Registrar Movimiento</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                            <h4 class="text-muted">No hay productos registrados</h4>
+                            <p class="text-muted">Comienza agregando tu primer producto al inventario.</p>
+                            <a href="{% url 'crear_producto' %}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Crear Primer Producto
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón para regresar al dashboard -->
+    <div class="row mt-3">
+        <div class="col-12">
+            <a href="{% url 'dashboard_cardex' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Regresar al Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}

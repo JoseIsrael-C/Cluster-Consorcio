@@ -1,0 +1,454 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Certificado de Blockchain - {{ titulo_certificado }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-certificate"></i> Certificado de Blockchain Generado
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <!-- Información del Alumno -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h4 class="text-primary">
+                                <i class="fas fa-user-graduate"></i> Información del Alumno
+                            </h4>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Nombre Completo:</strong> {{ alumno.nombre_completo }}</p>
+                                            <p><strong>Matrícula:</strong> {{ alumno.matricula }}</p>
+                                            <p><strong>CURP:</strong> {{ alumno.curp }}</p>
+                                            <p><strong>Carrera:</strong> {{ alumno.carrera.nombre }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Semestre:</strong> {{ alumno.semestre_actual }}</p>
+                                            <p><strong>Estado:</strong> {{ alumno.get_estado_display }}</p>
+                                            <p><strong>Fecha de Ingreso:</strong> {{ alumno.fecha_ingreso|date:"d/m/Y" }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información del Documento -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h4 class="text-success">
+                                <i class="fas fa-file-alt"></i> Información del Documento
+                            </h4>
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            {% if tipo_documento == 'academico' %}
+                                                <p><strong>Tipo de Documento:</strong> {{ documento.get_tipo_documento_display }}</p>
+                                                <p><strong>Título:</strong> {{ documento.titulo }}</p>
+                                                <p><strong>Período Académico:</strong> {{ documento.periodo_academico|default:"No especificado" }}</p>
+                                                <p><strong>Estado de Revisión:</strong> 
+                                                    <span class="badge bg-{% if documento.estado_revision == 'aprobado' %}success{% elif documento.estado_revision == 'rechazado' %}danger{% else %}warning{% endif %}">
+                                                        {{ documento.get_estado_revision_display }}
+                                                    </span>
+                                                </p>
+                                            {% else %}
+                                                <p><strong>Categoría:</strong> {{ documento.categoria.nombre }}</p>
+                                                <p><strong>Nombre del Documento:</strong> {{ documento.nombre_documento }}</p>
+                                                <p><strong>Estado:</strong> 
+                                                    <span class="badge bg-{% if documento.estado == 'aprobado' %}success{% elif documento.estado == 'rechazado' %}danger{% else %}warning{% endif %}">
+                                                        {{ documento.get_estado_display }}
+                                                    </span>
+                                                </p>
+                                                {% if documento.fecha_vencimiento %}
+                                                <p><strong>Fecha de Vencimiento:</strong> {{ documento.fecha_vencimiento|date:"d/m/Y" }}</p>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Fecha de Subida:</strong> {{ documento.fecha_subida|date:"d/m/Y H:i:s" }}</p>
+                                            {% if documento.descripcion %}
+                                            <p><strong>Descripción:</strong> {{ documento.descripcion }}</p>
+                                            {% endif %}
+                                            {% if documento.archivo %}
+                                            <p><strong>Archivo:</strong> 
+                                                <a href="{{ documento.archivo.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-download"></i> Descargar
+                                                </a>
+                                            </p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hash del Documento -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h4 class="text-warning">
+                                <i class="fas fa-shield-alt"></i> Hash del Documento
+                            </h4>
+                            <div class="card border-warning">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Hash del Documento (SHA-256):</strong></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control font-monospace" 
+                                                   value="{{ hash_documento }}" readonly id="hashInput">
+                                            <button class="btn btn-outline-secondary" type="button" onclick="copiarHash()">
+                                                <i class="fas fa-copy"></i> Copiar
+                                            </button>
+                                        </div>
+                                        <div class="form-text">Este hash es único para este documento específico</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>ID del Certificado:</strong></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control font-monospace" 
+                                                   value="{{ certificado_id }}" readonly id="certIdInput">
+                                            <button class="btn btn-outline-secondary" type="button" onclick="copiarCertId()">
+                                                <i class="fas fa-copy"></i> Copiar
+                                            </button>
+                                        </div>
+                                        <div class="form-text">
+                                            <strong>Formato:</strong> CURP_TIPO_DOCUMENTO_ID_TIMESTAMP<br>
+                                            <small class="text-muted">Ejemplo: ABCD123456HDFXYZ01_CERT_123_1703123456</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información de la Transacción Blockchain -->
+                    {% if receipt %}
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h4 class="text-info">
+                                <i class="fas fa-cube"></i> Información de la Transacción Blockchain
+                            </h4>
+                            <div class="card border-info">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Hash de Transacción:</strong></p>
+                                            <div class="input-group mb-2">
+                                                <input type="text" class="form-control font-monospace small" 
+                                                       value="{{ receipt.hash }}" readonly id="txHash">
+                                                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="copiarTxHash()">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                            </div>
+                                            
+                                            <p><strong>Hash del Bloque:</strong></p>
+                                            <div class="input-group mb-2">
+                                                <input type="text" class="form-control font-monospace small" 
+                                                       value="{{ receipt.hash2 }}" readonly id="blockHash">
+                                                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="copiarBlockHash()">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Número de Bloque:</strong> {{ receipt.blocke }}</p>
+                                            <p><strong>Nonce:</strong> {{ receipt.nonce }}</p>
+                                            <p><strong>Estado:</strong> 
+                                                {% if receipt.nonce2 == 1 %}
+                                                    <span class="badge bg-success">Exitoso</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Fallido</span>
+                                                {% endif %}
+                                            </p>
+                                            <p><strong>Fecha de Emisión:</strong> {{ "now"|date:"d/m/Y H:i:s" }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Flujo de Trabajo -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h4 class="text-info">
+                                <i class="fas fa-route"></i> Flujo de Trabajo del Documento
+                            </h4>
+                            <div class="card border-info">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="text-center p-3 bg-light rounded">
+                                                <h6 class="text-primary">1. Subida</h6>
+                                                <i class="fas fa-upload fa-2x text-primary mb-2"></i>
+                                                <p class="small mb-0">El alumno sube el documento</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-center p-3 bg-light rounded">
+                                                <h6 class="text-warning">2. Revisión</h6>
+                                                <i class="fas fa-search fa-2x text-warning mb-2"></i>
+                                                <p class="small mb-0">El administrador revisa el documento</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-center p-3 bg-light rounded">
+                                                <h6 class="text-success">3. Aprobación</h6>
+                                                <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                                <p class="small mb-0">El administrador aprueba el documento</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-center p-3 bg-success rounded text-white">
+                                                <h6>4. Certificación</h6>
+                                                <i class="fas fa-certificate fa-2x mb-2"></i>
+                                                <p class="small mb-0">Se genera el certificado blockchain</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-info mt-3">
+                                        <i class="fas fa-info-circle"></i>
+                                        <strong>Importante:</strong> Solo los documentos aprobados pueden ser certificados. 
+                                        La certificación es un proceso manual y separado de la aprobación.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información Técnica -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h4 class="text-secondary">
+                                <i class="fas fa-info-circle"></i> Información Técnica del Certificado
+                            </h4>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Algoritmo de Hash:</strong> SHA-256</p>
+                                            <p><strong>Longitud del Hash:</strong> {{ hash_documento|length }} caracteres</p>
+                                            <p><strong>Tipo de Documento:</strong> {{ tipo_documento|title }}</p>
+                                            <p><strong>Formato del ID:</strong> CURP + Tipo + ID + Timestamp</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Datos Incluidos:</strong></p>
+                                            <ul class="small">
+                                                <li>Información del alumno (matrícula, CURP, nombre)</li>
+                                                <li>Detalles específicos del documento</li>
+                                                <li>Fecha y hora de generación</li>
+                                                <li>Estado del documento</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <strong>Importante:</strong> Este certificado es único para este documento específico. 
+                                        Cualquier modificación del documento generará un hash diferente.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Descomposición del ID del Certificado -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h4 class="text-primary">
+                                <i class="fas fa-barcode"></i> Descomposición del ID del Certificado
+                            </h4>
+                            <div class="card border-primary">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="text-center p-3 bg-light rounded">
+                                                <h6 class="text-primary">CURP</h6>
+                                                <code class="text-dark">{{ alumno.curp }}</code>
+                                                <small class="d-block text-muted mt-1">Identificación del alumno</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-center p-3 bg-light rounded">
+                                                <h6 class="text-success">Tipo</h6>
+                                                <code class="text-dark">{{ certificado_id|slice:"19:"|slice:":4" }}</code>
+                                                <small class="d-block text-muted mt-1">Tipo de documento abreviado</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-center p-3 bg-light rounded">
+                                                <h6 class="text-info">ID Doc</h6>
+                                                <code class="text-dark">{{ documento.id }}</code>
+                                                <small class="d-block text-muted mt-1">ID del documento</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-center p-3 bg-light rounded">
+                                                <h6 class="text-warning">Timestamp</h6>
+                                                <code class="text-dark">{{ certificado_id|slice:"-10:" }}</code>
+                                                <small class="d-block text-muted mt-1">Fecha de generación</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 text-center">
+                                        <strong>ID Completo:</strong> <code class="text-primary">{{ certificado_id }}</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Datos del Hash (para verificación) -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h4 class="text-dark">
+                                <i class="fas fa-database"></i> Datos Hasheados
+                            </h4>
+                            <div class="card">
+                                <div class="card-body">
+                                    <pre class="bg-light p-3 rounded"><code>{{ informacion_documento|pprint }}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'detalle_alumno' alumno.id %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-arrow-left"></i> Volver al Detalle del Alumno
+                        </a>
+                        <button type="button" class="btn btn-primary" onclick="imprimirCertificado()">
+                            <i class="fas fa-print"></i> Imprimir Certificado
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<script>
+function copiarHash() {
+    const hashInput = document.getElementById('hashInput');
+    hashInput.select();
+    hashInput.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    
+    const button = event.target.closest('button');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+    button.classList.remove('btn-outline-secondary');
+    button.classList.add('btn-success');
+    
+    setTimeout(() => {
+        button.innerHTML = originalText;
+        button.classList.remove('btn-success');
+        button.classList.add('btn-outline-secondary');
+    }, 2000);
+}
+
+function copiarCertId() {
+    const certIdInput = document.getElementById('certIdInput');
+    certIdInput.select();
+    document.execCommand('copy');
+    
+    const button = event.target.closest('button');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-check"></i>';
+    button.classList.add('btn-success');
+    
+    setTimeout(() => {
+        button.innerHTML = originalText;
+        button.classList.remove('btn-success');
+    }, 2000);
+}
+
+function copiarTxHash() {
+    const txHashInput = document.getElementById('txHash');
+    txHashInput.select();
+    document.execCommand('copy');
+    
+    const button = event.target.closest('button');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-check"></i>';
+    button.classList.add('btn-success');
+    
+    setTimeout(() => {
+        button.innerHTML = originalText;
+        button.classList.remove('btn-success');
+    }, 2000);
+}
+
+function copiarBlockHash() {
+    const blockHashInput = document.getElementById('blockHash');
+    blockHashInput.select();
+    document.execCommand('copy');
+    
+    const button = event.target.closest('button');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-check"></i>';
+    button.classList.add('btn-success');
+    
+    setTimeout(() => {
+        button.innerHTML = originalText;
+        button.classList.remove('btn-success');
+    }, 2000);
+}
+
+function imprimirCertificado() {
+    window.print();
+}
+
+// Auto-seleccionar el hash principal al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    const hashInput = document.getElementById('hashInput');
+    if (hashInput) {
+        hashInput.focus();
+        hashInput.select();
+    }
+});
+</script>
+
+<style>
+@media print {
+    .btn, .d-grid {
+        display: none !important;
+    }
+    
+    .card {
+        border: 1px solid #000 !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .font-monospace {
+        font-size: 10px;
+        word-break: break-all;
+    }
+    
+    .alert {
+        border: 1px solid #000 !important;
+    }
+}
+</style>
+{% endblock %}

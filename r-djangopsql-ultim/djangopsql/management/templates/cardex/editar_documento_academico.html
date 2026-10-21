@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Editar Documento Académico{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-edit"></i> Editar Documento Académico</h2>
+                <a href="{% url 'detalle_alumno' documento.alumno.id %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Información del Documento</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label">Título del Documento</label>
+                            <input type="text" class="form-control" id="titulo" name="titulo"
+                                   value="{{ documento.titulo }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tipo_documento" class="form-label">Tipo de Documento</label>
+                            <select class="form-control" id="tipo_documento" name="tipo_documento" required>
+                                <option value="certificado" {% if documento.tipo_documento == 'certificado' %}selected{% endif %}>Certificado</option>
+                                <option value="constancia" {% if documento.tipo_documento == 'constancia' %}selected{% endif %}>Constancia</option>
+                                <option value="boleta" {% if documento.tipo_documento == 'boleta' %}selected{% endif %}>Boleta de Calificaciones</option>
+                                <option value="historial" {% if documento.tipo_documento == 'historial' %}selected{% endif %}>Historial Académico</option>
+                                <option value="titulo" {% if documento.tipo_documento == 'titulo' %}selected{% endif %}>Título</option>
+                                <option value="cedula" {% if documento.tipo_documento == 'cedula' %}selected{% endif %}>Cédula Profesional</option>
+                                <option value="otro" {% if documento.tipo_documento == 'otro' %}selected{% endif %}>Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="periodo_academico" class="form-label">Periodo Académico</label>
+                            <input type="text" class="form-control" id="periodo_academico" name="periodo_academico"
+                                   value="{{ documento.periodo_academico }}" placeholder="Ej: 2024-1">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3">{{ documento.descripcion }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="archivo" class="form-label">Archivo (opcional)</label>
+                            <input type="file" class="form-control" id="archivo" name="archivo" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            {% if documento.archivo %}
+                                <div class="mt-2">
+                                    <small class="text-muted">Archivo actual: {{ documento.archivo.name }}</small>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <a href="{% url 'detalle_alumno' documento.alumno.id %}" class="btn btn-secondary me-2">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Información del Alumno</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nombre:</strong> {{ documento.alumno.nombre_completo }}</p>
+                    <p><strong>Matrícula:</strong> {{ documento.alumno.matricula }}</p>
+                    <p><strong>Carrera:</strong> {{ documento.alumno.carrera.nombre }}</p>
+                    <p><strong>Estado:</strong>
+                        {% if documento.alumno.estado == 'activo' %}
+                            <span class="badge bg-success">Activo</span>
+                        {% elif documento.alumno.estado == 'inactivo' %}
+                            <span class="badge bg-secondary">Inactivo</span>
+                        {% elif documento.alumno.estado == 'egresado' %}
+                            <span class="badge bg-primary">Egresado</span>
+                        {% else %}
+                            <span class="badge bg-warning">Baja Temporal</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Estado del Documento</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Estado de Revisión:</strong>
+                        {% if documento.estado_revision == 'aprobado' %}
+                            <span class="badge bg-success">Aprobado</span>
+                        {% elif documento.estado_revision == 'rechazado' %}
+                            <span class="badge bg-danger">Rechazado</span>
+                        {% elif documento.estado_revision == 'en_revision' %}
+                            <span class="badge bg-warning">En Revisión</span>
+                        {% else %}
+                            <span class="badge bg-info">Pendiente</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Fecha de Subida:</strong> {{ documento.fecha_subida|date:"d/m/Y H:i" }}</p>
+                    {% if documento.fecha_revision %}
+                        <p><strong>Fecha de Revisión:</strong> {{ documento.fecha_revision|date:"d/m/Y H:i" }}</p>
+                    {% endif %}
+                    {% if documento.revisado_por %}
+                        <p><strong>Revisado por:</strong> {{ documento.revisado_por.get_full_name|default:documento.revisado_por.username }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}

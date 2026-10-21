@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Gestión de Instituciones de Procedencia{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-school"></i> Gestión de Instituciones de Procedencia</h2>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearInstitucionModal">
+                    <i class="fas fa-plus"></i> Nueva Institución
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Lista de instituciones -->
+    <div class="card">
+        <div class="card-body">
+            {% if instituciones %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Ubicación</th>
+                                <th>Clave</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for institucion in instituciones %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ institucion.nombre }}</strong>
+                                        {% if institucion.descripcion %}
+                                            <br><small class="text-muted">{{ institucion.descripcion|truncatechars:50 }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if institucion.tipo_institucion == 'preparatoria' %}
+                                            <span class="badge bg-primary">Preparatoria</span>
+                                        {% elif institucion.tipo_institucion == 'universidad' %}
+                                            <span class="badge bg-success">Universidad</span>
+                                        {% elif institucion.tipo_institucion == 'tecnico' %}
+                                            <span class="badge bg-warning">Técnico</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ institucion.tipo_institucion|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ institucion.ciudad }}{% if institucion.ciudad and institucion.estado %}, {% endif %}{{ institucion.estado }}
+                                        {% if institucion.pais and institucion.pais != 'México' %}
+                                            <br><small class="text-muted">{{ institucion.pais }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ institucion.clave_institucion|default:"-" }}
+                                    </td>
+                                    <td>
+                                        {% if institucion.borrado %}
+                                            <span class="badge bg-success">Activa</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inactiva</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editarInstitucionModal{{ institucion.id }}">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </button>
+                                            {% if institucion.borrado %}
+                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="desactivarInstitucion({{ institucion.id }})">
+                                                    <i class="fas fa-ban"></i> Desactivar
+                                                </button>
+                                            {% else %}
+                                                <button type="button" class="btn btn-sm btn-outline-success" onclick="activarInstitucion({{ institucion.id }})">
+                                                    <i class="fas fa-check"></i> Activar
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-school fa-3x text-muted mb-3"></i>
+                    <h4>No hay instituciones registradas</h4>
+                    <p class="text-muted">Comienza creando tu primera institución de procedencia.</p>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearInstitucionModal">
+                        <i class="fas fa-plus"></i> Crear Primera Institución
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear Institución -->
+<div class="modal fade" id="crearInstitucionModal" tabindex="-1" aria-labelledby="crearInstitucionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="crearInstitucionModalLabel">Crear Nueva Institución</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'gestionar_instituciones_procedencia' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre de la Institución *</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre"
+                                       placeholder="Ej: Centro de Bachillerato Tecnológico Industrial y de Servicios" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="tipo_institucion" class="form-label">Tipo de Institución *</label>
+                                <select class="form-select" id="tipo_institucion" name="tipo_institucion" required>
+                                    <option value="preparatoria">Preparatoria</option>
+                                    <option value="universidad">Universidad</option>
+                                    <option value="tecnico">Técnico</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="ciudad" class="form-label">Ciudad</label>
+                                <input type="text" class="form-control" id="ciudad" name="ciudad"
+                                       placeholder="Ej: Ciudad de México">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="estado" class="form-label">Estado</label>
+                                <input type="text" class="form-control" id="estado" name="estado"
+                                       placeholder="Ej: Ciudad de México">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="pais" class="form-label">País</label>
+                                <input type="text" class="form-control" id="pais" name="pais"
+                                       value="México" placeholder="Ej: México">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="clave_institucion" class="form-label">Clave de Institución</label>
+                                <input type="text" class="form-control" id="clave_institucion" name="clave_institucion"
+                                       placeholder="Ej: 09PBT0001A">
+                                <div class="form-text">Clave oficial de la institución (opcional)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
+                                  placeholder="Información adicional sobre la institución..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Crear Institución</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modales de Edición (uno por institución) -->
+{% for institucion in instituciones %}
+<div class="modal fade" id="editarInstitucionModal{{ institucion.id }}" tabindex="-1" aria-labelledby="editarInstitucionModalLabel{{ institucion.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarInstitucionModalLabel{{ institucion.id }}">Editar Institución</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'gestionar_instituciones_procedencia' %}">
+                {% csrf_token %}
+                <input type="hidden" name="institucion_id" value="{{ institucion.id }}">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="nombre_edit{{ institucion.id }}" class="form-label">Nombre de la Institución *</label>
+                                <input type="text" class="form-control" id="nombre_edit{{ institucion.id }}" name="nombre"
+                                       value="{{ institucion.nombre }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="tipo_institucion_edit{{ institucion.id }}" class="form-label">Tipo de Institución *</label>
+                                <select class="form-select" id="tipo_institucion_edit{{ institucion.id }}" name="tipo_institucion" required>
+                                    <option value="preparatoria" {% if institucion.tipo_institucion == 'preparatoria' %}selected{% endif %}>Preparatoria</option>
+                                    <option value="universidad" {% if institucion.tipo_institucion == 'universidad' %}selected{% endif %}>Universidad</option>
+                                    <option value="tecnico" {% if institucion.tipo_institucion == 'tecnico' %}selected{% endif %}>Técnico</option>
+                                    <option value="otro" {% if institucion.tipo_institucion == 'otro' %}selected{% endif %}>Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="ciudad_edit{{ institucion.id }}" class="form-label">Ciudad</label>
+                                <input type="text" class="form-control" id="ciudad_edit{{ institucion.id }}" name="ciudad"
+                                       value="{{ institucion.ciudad }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="estado_edit{{ institucion.id }}" class="form-label">Estado</label>
+                                <input type="text" class="form-control" id="estado_edit{{ institucion.id }}" name="estado"
+                                       value="{{ institucion.estado }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="pais_edit{{ institucion.id }}" class="form-label">País</label>
+                                <input type="text" class="form-control" id="pais_edit{{ institucion.id }}" name="pais"
+                                       value="{{ institucion.pais }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="clave_institucion_edit{{ institucion.id }}" class="form-label">Clave de Institución</label>
+                                <input type="text" class="form-control" id="clave_institucion_edit{{ institucion.id }}" name="clave_institucion"
+                                       value="{{ institucion.clave_institucion }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descripcion_edit{{ institucion.id }}" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion_edit{{ institucion.id }}" name="descripcion" rows="3">{{ institucion.descripcion }}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Actualizar Institución</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Font Awesome para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<script>
+function desactivarInstitucion(institucionId) {
+    if (confirm('¿Estás seguro de que deseas desactivar esta institución? Los alumnos ya registrados podrán continuar, pero no se podrá asignar a nuevos alumnos.')) {
+        // Aquí iría la lógica para desactivar la institución
+        alert('Función no implementada aún');
+    }
+}
+
+function activarInstitucion(institucionId) {
+    if (confirm('¿Estás seguro de que deseas activar esta institución?')) {
+        // Aquí iría la lógica para activar la institución
+        alert('Función no implementada aún');
+    }
+}
+</script>
+{% endblock %}

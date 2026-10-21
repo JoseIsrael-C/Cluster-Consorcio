@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid pt-5">
+
+    <!-- Título -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Panel del Profesor</h1>
+        <span class="d-none d-sm-inline-block text-gray-600 small">{{ fecha_actual|date:"l d \d\e F \d\e Y" }}</span>
+    </div>
+
+    <!-- Tarjeta de Bienvenida -->
+    <div class="row mb-4">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4 border-left-primary">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-chalkboard-teacher fa-4x text-gray-300"></i>
+                        </div>
+                        <div class="col">
+                            <h4 class="font-weight-bold text-primary">¡Bienvenido, {{ usuario.first_name }} {{ usuario.last_name }}!</h4>
+                            <p class="mb-0">Desde este panel puedes gestionar las calificaciones de tus alumnos y consultar el historial académico.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accesos Rápidos -->
+    <div class="row">
+
+        <!-- Registrar Calificaciones -->
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Gestión Académica</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Registrar Calificaciones</div>
+                            <p class="mt-2 text-sm text-gray-600">Asigna calificaciones a los alumnos por materia y periodo.</p>
+                            <a href="{% url 'registrar_calificacion' %}" class="btn btn-success btn-sm mt-2">
+                                <i class="fas fa-edit"></i> Ir a Registrar
+                            </a>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-pen-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historial -->
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Consultas</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Historial de Calificaciones</div>
+                            <p class="mt-2 text-sm text-gray-600">Consulta y filtra las calificaciones registradas anteriormente.</p>
+                            <a href="{% url 'historial_calificaciones' %}" class="btn btn-info btn-sm mt-2">
+                                <i class="fas fa-list-alt"></i> Ver Historial
+                            </a>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-history fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

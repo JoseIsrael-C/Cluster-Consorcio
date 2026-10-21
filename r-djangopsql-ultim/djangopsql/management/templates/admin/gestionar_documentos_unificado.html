@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}CARDEX DOCUMENTOS{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2><i class="fas fa-archive"></i> CARDEX DOCUMENTOS</h2>
+                <a href="{% url 'ct_catalogos' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver a Catálogos</a>
+            </div>
+            <p class="text-muted">Gestión centralizada de documentos personales, académicos y de titulación.</p>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" action="{% url 'gestionar_documentos_unificado' %}">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="tipo" class="form-label">Tipo de Documento</label>
+                        <select name="tipo" id="tipo" class="form-select">
+                            <option value="">Todos</option>
+                            <option value="Personal" {% if tipo_seleccionado == 'Personal' %}selected{% endif %}>Personal</option>
+                            <option value="Académico" {% if tipo_seleccionado == 'Académico' %}selected{% endif %}>Académico</option>
+                            <option value="Titulación" {% if tipo_seleccionado == 'Titulación' %}selected{% endif %}>Titulación</option>
+                            <option value="Aspirante" {% if tipo_seleccionado == 'Aspirante' %}selected{% endif %}>Aspirante</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="estado" class="form-label">Estado de Revisión</label>
+                        <select name="estado" id="estado" class="form-select">
+                            <option value="">Todos</option>
+                            <option value="pendiente" {% if estado_seleccionado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+                            <option value="aprobado" {% if estado_seleccionado == 'aprobado' %}selected{% endif %}>Aprobado</option>
+                            <option value="rechazado" {% if estado_seleccionado == 'rechazado' %}selected{% endif %}>Rechazado</option>
+                            <option value="en_revision" {% if estado_seleccionado == 'en_revision' %}selected{% endif %}>En Revisión</option>
+                            <option value="corregido" {% if estado_seleccionado == 'corregido' %}selected{% endif %}>Requiere Correcciones</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="usuario" class="form-label">Usuario</label>
+                        <select name="usuario" id="usuario" class="form-select">
+                            <option value="">Todos los usuarios</option>
+                            {% for u in usuarios %}
+                                <option value="{{ u.id }}" {% if usuario_seleccionado == u.id %}selected{% endif %}>{{ u.username }} - {{ u.first_name }} {{ u.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter"></i> Filtrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla de Documentos -->
+    <div class="card">
+        <div class="card-body">
+            {% if documentos %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Documento</th>
+                                <th>Tipo</th>
+                                <th>Fecha Subida</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doc in documentos %}
+                                <tr>
+                                    <td>
+                                        <a href="{% if doc.tipo_general == 'Académico' and doc.usuario.alumno %}{% url 'detalle_alumno' doc.usuario.alumno.id %}{% else %}{% url 'gestionar_documentos_unificado' %}?usuario={{ doc.usuario.id }}{% endif %}">
+                                            {{ doc.usuario.username }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <strong>{{ doc.titulo }}</strong>
+                                    </td>
+                                    <td>
+                                        {% if doc.tipo_general == 'Aspirante' %}<span class="badge bg-warning text-dark">{{ doc.tipo_general }}</span>
+                                        {% elif doc.tipo_general == 'Personal' %}<span class="badge bg-info">{{ doc.tipo_general }}</span>
+                                        {% elif doc.tipo_general == 'Académico' %}<span class="badge bg-primary">{{ doc.tipo_general }}</span>
+                                        {% elif doc.tipo_general == 'Titulación' %}<span class="badge bg-success">{{ doc.tipo_general }}</span>
+                                        {% endif %}
+                                        <br>
+                                        <small class="text-muted">{{ doc.tipo_especifico }}</small>
+                                    </td>
+                                    <td>{{ doc.fecha_subida|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        {% if doc.estado == 'aprobado' %}<span class="badge bg-success">Aprobado</span>
+                                        {% elif doc.estado == 'rechazado' %}<span class="badge bg-danger">Rechazado</span>
+                                        {% elif doc.estado == 'en_revision' %}<span class="badge bg-warning text-dark">En Revisión</span>
+                                        {% elif doc.estado == 'corregido' %}<span class="badge bg-secondary">Requiere Corrección</span>
+                                        {% else %}<span class="badge bg-info text-dark">Pendiente</span>{% endif %}
+                                    </td>
+                                    <td>
+                                        {% if doc.archivo_url %}<a href="{{ doc.archivo_url }}" target="_blank" class="btn btn-sm btn-outline-secondary" title="Ver Archivo"><i class="fas fa-eye"></i></a>{% endif %}
+                                        <a href="{{ doc.url_revision }}" class="btn btn-sm btn-outline-primary" title="Revisar Documento"><i class="fas fa-search"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                    <h4>No se encontraron documentos</h4>
+                    <p class="text-muted">No hay documentos que coincidan con los filtros seleccionados, o aún no se han subido documentos.</p>
+                    <a href="{% url 'gestionar_documentos_unificado' %}" class="btn btn-primary">Limpiar Filtros</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

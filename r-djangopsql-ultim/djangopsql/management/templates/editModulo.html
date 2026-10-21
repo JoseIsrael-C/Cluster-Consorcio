@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Editar modulo {% endblock %}
+
+{% block content %}
+    <div class="row mt-3"></div>
+    <div class="col-sm-6 mt-3">
+        <div class="row">
+            <h1>Actualizar modulo</h1>
+            <div class="card" >
+                <div class="row">
+                    <h1>Perfi</h1>
+                    <form action="{% url 'updateModulo' modulo.id %}" method="POST">
+                        {% csrf_token %}
+                        <!-- <input type="hidden" name="txtIdPerfilUpdate" value="{{perfil.id}}" readonly> -->
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" value="{{modulo.nombre}}" 
+                                name="txtNombreUpModu" id="txtNombreUpModu"
+                                placeholder="Catalogos" 
+                            >
+                            <label for="txtNombreUpModu">Nombre del modulo</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" value="{{modulo.borrado}}" 
+                                name="txtFborradoUpModu" id="txtFborradoUpModu"
+                                min="0" max="1" placeholder="1 o 0"
+                            >
+                            <label for="txtFborradoUpModu">Estado del modulo</label>
+                        </div>
+                        <button class="btn">Guardar</button>
+                        <!-- <button class="btn" data-bs-toggle="modal" data-bs-target="#modalInsert" >+</button> -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

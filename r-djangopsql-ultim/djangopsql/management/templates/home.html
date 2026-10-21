@@ -1,0 +1,579 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inicio - Sistema de Gestión Académica{% endblock %}
+
+{% block content %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 80px 0;
+        margin-top: -20px;
+        margin-bottom: 50px;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        margin-bottom: 20px;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        font-weight: 300;
+        opacity: 0.9;
+        margin-bottom: 30px;
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        overflow: hidden;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+
+    .feature-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .feature-description {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .stats-section {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 60px 0;
+        margin: 50px 0;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
+        font-weight: 300;
+        opacity: 0.9;
+    }
+
+    .welcome-message {
+        background: rgba(255,255,255,0.1);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 50px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .btn-custom {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background: linear-gradient(45deg, #764ba2, #667eea);
+        color: white;
+        transform: scale(1.05);
+    }
+
+    .student-home {
+        text-align: center;
+        padding: 60px 0;
+    }
+
+    .student-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        padding: 40px;
+        margin: 20px auto;
+        max-width: 500px;
+    }
+
+    .student-icon {
+        font-size: 5rem;
+        color: #667eea;
+        margin-bottom: 30px;
+    }
+
+    .student-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .student-subtitle {
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 40px;
+        line-height: 1.6;
+    }
+
+    .btn-student {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        color: white;
+        padding: 15px 40px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .btn-student:hover {
+        background: linear-gradient(45deg, #764ba2, #667eea);
+        color: white;
+        transform: scale(1.05);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+        }
+
+        .student-title {
+            font-size: 2rem;
+        }
+
+        .student-icon {
+            font-size: 4rem;
+        }
+    }
+</style>
+
+{% if user.is_superuser %}
+    <!-- Vista para Administradores -->
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="hero-title">🎓 Sistema de Gestión Académica</h1>
+                    <p class="hero-subtitle">
+                        Bienvenido al sistema integral de gestión académica con blockchain.
+                        Administra alumnos, carreras, documentos y más de manera eficiente y segura.
+                    </p>
+                    <a href="{% url 'dashboard_cardex' %}" class="btn btn-custom btn-lg">
+                        <i class="fas fa-tachometer-alt"></i> Ir al Dashboard
+                    </a>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <i class="fas fa-graduation-cap" style="font-size: 8rem; opacity: 0.8;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Welcome Message -->
+        <div class="welcome-message">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3 class="mb-3">
+                        <i class="fas fa-user-circle text-primary"></i>
+                        ¡Hola, {{ user.first_name|default:user.username }}!
+                    </h3>
+                    <p class="mb-0">
+                        Tu sesión está activa y segura. Explora las funcionalidades del sistema
+                        para gestionar eficientemente la información académica.
+                    </p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-shield-alt" style="font-size: 4rem; color: #28a745;"></i>
+                    <p class="mt-2 mb-0 text-white">Sesión Segura</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card p-4 text-center h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5 class="feature-title">Gestión de Alumnos</h5>
+                    <p class="feature-description">
+                        Administra la información completa de los estudiantes,
+                        calificaciones y progreso académico.
+                    </p>
+                    <a href="{% url 'listar_alumnos' %}" class="btn btn-custom btn-sm mt-3">
+                        Ver Alumnos
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card p-4 text-center h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h5 class="feature-title">Carreras Académicas</h5>
+                    <p class="feature-description">
+                        Gestiona las carreras, materias y planes de estudio
+                        de manera organizada.
+                    </p>
+                    <a href="{% url 'gestionar_carreras_admin' %}" class="btn btn-custom btn-sm mt-3">
+                        Gestionar Carreras
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card p-4 text-center h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h5 class="feature-title">Documentos</h5>
+                    <p class="feature-description">
+                        Sube, organiza y administra documentos académicos
+                        de forma segura.
+                    </p>
+                    <a href="{% url 'listar_documentos' %}" class="btn btn-custom btn-sm mt-3">
+                        Ver Documentos
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card p-4 text-center h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <h5 class="feature-title">Cardex</h5>
+                    <p class="feature-description">
+                        Gestión académica completa con control de alumnos,
+                        calificaciones y reportes detallados.
+                    </p>
+                    <a href="{% url 'dashboard_cardex' %}" class="btn btn-custom btn-sm mt-3">
+                        Ver Cardex
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card p-4">
+                    <h6 class="text-primary mb-3">
+                        <i class="fas fa-plus-circle"></i> Acciones Rápidas
+                    </h6>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'crear_alumno' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-user-plus"></i> Nuevo Alumno
+                        </a>
+                        <a href="{% url 'subir_documento' %}" class="btn btn-outline-success">
+                            <i class="fas fa-upload"></i> Subir Documento
+                        </a>
+                        <a href="{% url 'registrar_calificacion' %}" class="btn btn-outline-info">
+                            <i class="fas fa-star"></i> Registrar Calificación
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card p-4">
+                    <h6 class="text-success mb-3">
+                        <i class="fas fa-chart-line"></i> Reportes
+                    </h6>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'dashboard_cardex' %}" class="btn btn-outline-success">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                        <a href="{% url 'historial_calificaciones' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-chart-bar"></i> Calificaciones
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card p-4">
+                    <h6 class="text-warning mb-3">
+                        <i class="fas fa-certificate"></i> Blockchain
+                    </h6>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'certificados' %}" class="btn btn-outline-warning">
+                            <i class="fas fa-link"></i> Certificados
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary" disabled>
+                            <i class="fas fa-lock"></i> Próximamente
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="stat-number">{{ total_alumnos|default:0 }}</div>
+                    <div class="stat-label">Alumnos Registrados</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number">{{ total_carreras|default:0 }}</div>
+                    <div class="stat-label">Carreras Activas</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number">{{ documentos_hoy|default:0 }}</div>
+                    <div class="stat-label">Documentos Hoy</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-number">{{ creditos_pendientes|default:0 }}</div>
+                    <div class="stat-label">Créditos Pendientes</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <!-- System Info -->
+        <div class="row">
+            <div class="col-12">
+                <div class="feature-card p-4">
+                    <h5 class="text-center mb-4">
+                        <i class="fas fa-info-circle text-info"></i>
+                        Información del Sistema
+                    </h5>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <i class="fas fa-shield-alt fa-2x text-success mb-2"></i>
+                            <h6>Seguridad Blockchain</h6>
+                            <small class="text-muted">Tus datos están protegidos con tecnología blockchain</small>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                            <h6>Disponibilidad 24/7</h6>
+                            <small class="text-muted">Accede al sistema en cualquier momento</small>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="fas fa-users-cog fa-2x text-primary mb-2"></i>
+                            <h6>Soporte Técnico</h6>
+                            <small class="text-muted">Equipo especializado para asistencia</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% else %}
+    <!-- Vista para Alumnos -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="hero-title">🎓 Bienvenido, {{ user.first_name|default:user.username }}!</h1>
+                    <p class="hero-subtitle">
+                        Accede a tu información académica, documentos y calificaciones
+                        de manera segura y organizada con tecnología blockchain.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <i class="fas fa-user-graduate" style="font-size: 8rem; opacity: 0.8;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Welcome Message -->
+        <div class="welcome-message">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3 class="mb-3">
+                        <i class="fas fa-user-circle text-primary"></i>
+                        ¡Hola, {{ user.first_name|default:user.username }}!
+                    </h3>
+                    <p class="mb-0">
+                        Tu sesión está activa y segura. Explora tu información académica
+                        y gestiona tus documentos de manera eficiente.
+                    </p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-shield-alt" style="font-size: 4rem; color: #28a745;"></i>
+                    <p class="mt-2 mb-0 text-white">Sesión Segura</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Main Action Card -->
+        <div class="student-home">
+            <div class="student-card">
+                <div class="student-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <h2 class="student-title">Mi Detalle</h2>
+                <p class="student-subtitle">
+                    Consulta tu información personal, documentos académicos, 
+                    calificaciones y estado de tu trámite de titulación.
+                </p>
+                {% if user.alumno %}
+                    <a href="{% url 'detalle_alumno' user.alumno.id %}" class="btn-student">
+                        <i class="fas fa-user-graduate"></i> Ver Mi Detalle
+                    </a>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        No se encontró un perfil de alumno asociado a tu cuenta. 
+                        Contacta al administrador para crear tu perfil.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Quick Access Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card p-4 text-center h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h5 class="feature-title">Documentos Académicos</h5>
+                    <p class="feature-description">
+                        Gestiona tus documentos académicos, sube archivos
+                        y consulta su estado de revisión.
+                    </p>
+                    {% if user.alumno %}
+                    <a href="{% url 'gestionar_documentos_academicos' %}" class="btn btn-custom btn-sm mt-3">
+                        <i class="fas fa-eye"></i> Ver Documentos
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card p-4 text-center h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h5 class="feature-title">Documentos Personales</h5>
+                    <p class="feature-description">
+                        Administra tus documentos personales y
+                        consulta su estado de certificación.
+                    </p>
+                    {% if user.alumno %}
+                    <a href="{% url 'gestionar_documentos_personales' %}" class="btn btn-custom btn-sm mt-3">
+                        <i class="fas fa-eye"></i> Ver Documentos
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card p-4 text-center h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h5 class="feature-title">Documentos de Titulación</h5>
+                    <p class="feature-description">
+                        Consulta el estado de tu trámite de titulación
+                        y gestiona los documentos requeridos.
+                    </p>
+                    {% if user.alumno %}
+                    <a href="{% url 'listar_documentos_titulacion' %}" class="btn btn-custom btn-sm mt-3">
+                        <i class="fas fa-eye"></i> Ver Documentos
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Info Stats -->
+        {% if user.alumno %}
+        <div class="stats-section">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-6">
+                        <div class="stat-number">{{ user.alumno.carrera.nombre }}</div>
+                        <div class="stat-label">Tu Carrera</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-number">{{ user.alumno.carrera.materia_set.count }}</div>
+                        <div class="stat-label">Total de Materias en tu Carrera</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- System Information -->
+        <div class="row">
+            <div class="col-12">
+                <div class="feature-card p-4">
+                    <h5 class="text-center mb-4">
+                        <i class="fas fa-info-circle text-info"></i>
+                        Información del Sistema
+                    </h5>
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <i class="fas fa-shield-alt fa-2x text-success mb-2"></i>
+                            <h6>Seguridad Blockchain</h6>
+                            <small class="text-muted">Tus documentos están protegidos con tecnología blockchain</small>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                            <h6>Disponibilidad 24/7</h6>
+                            <small class="text-muted">Accede a tu información en cualquier momento</small>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="fas fa-certificate fa-2x text-primary mb-2"></i>
+                            <h6>Certificación Digital</h6>
+                            <small class="text-muted">Documentos certificados con hash único</small>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="fas fa-users-cog fa-2x text-info mb-2"></i>
+                            <h6>Soporte Técnico</h6>
+                            <small class="text-muted">Equipo especializado para asistencia</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}
+
