@@ -1,0 +1,54 @@
+{
+  "web3": "8.0.0",
+  "deploymentGas": 985932,
+  "calls": {
+    "emitir_certificado_patternA": {
+      "n": 27,
+      "mean": 259221.11111111112,
+      "sd": 14291.076250942628,
+      "failed": 3,
+      "failedRecords": [
+        {
+          "record": 0,
+          "bytes": 157,
+          "error": "Web3RPCError"
+        },
+        {
+          "record": 10,
+          "bytes": 157,
+          "error": "Web3RPCError"
+        },
+        {
+          "record": 20,
+          "bytes": 157,
+          "error": "Web3RPCError"
+        }
+      ]
+    },
+    "emitir_certificado_patternB": {
+      "n": 30,
+      "mean": 208880,
+      "sd": 63.75816377747921
+    },
+    "validar_certificado": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "obtener_certificado": [
+      "María Fernanda",
+      "López",
+      "Hernández",
+      "236022000",
+      "Certificado de estudios",
+      "01/10/2026",
+      true
+    ]
+  },
+  "errors": {
+    "revocar_certificado": "AttributeError: 'SignedTransaction' object has no attribute 'rawTransaction'",
+    "emitir_hash_alumno": "Web3RPCError: {'code': -32000, 'message': 'Transaction ran out of gas', 'data': {'message': 'Transaction ran out of gas', 'txHash': '0x94e47c8b2f87682ee653ed228fd2e2395bb7d65726aae5d3d68f1d2a4dfa045c', 'data': '0x'}}"
+  }
+}

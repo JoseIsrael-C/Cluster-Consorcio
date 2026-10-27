@@ -1,0 +1,1042 @@
+{
+  "startedAt": "2026-10-18T02:43:52.621Z",
+  "rate": 20,
+  "nodes": 10,
+  "submitThroughRpcNodes": true,
+  "scenarios": {
+    "S1": {
+      "scenario": "S1 steady 20 tx/s",
+      "submitted": 1200,
+      "accepted": 1200,
+      "rejectedAtSubmit": 0,
+      "confirmed": 1200,
+      "confirmedPct": 100,
+      "tps": 19.37651337618053,
+      "latency": {
+        "p50": 2.7905791015625,
+        "p95": 4.466605895996094,
+        "mean": 2.876520298868814,
+        "max": 7.50008056640625
+      },
+      "blocks": {
+        "count": 30,
+        "meanTxPerBlock": 40,
+        "maxTxPerBlock": 64,
+        "meanIntervalS": 2.103448275862069,
+        "maxIntervalS": 3
+      },
+      "retriedSubmissions": 0,
+      "errors": [],
+      "durationS": 60,
+      "issueGas": {
+        "mean": 133506.56,
+        "sd": 4.2742357105207605,
+        "n": 100,
+        "reverted": 0,
+        "sampled": 100
+      }
+    },
+    "S2": {
+      "scenario": "S2 burst of 60",
+      "submitted": 60,
+      "accepted": 60,
+      "rejectedAtSubmit": 0,
+      "confirmed": 60,
+      "confirmedPct": 100,
+      "tps": 17.806593699917595,
+      "latency": {
+        "p50": 3.079369140625,
+        "p95": 3.3695249267578125,
+        "mean": 2.96307391357422,
+        "max": 3.369538330078125
+      },
+      "blocks": {
+        "count": 1,
+        "meanTxPerBlock": 60,
+        "maxTxPerBlock": 60,
+        "meanIntervalS": null,
+        "maxIntervalS": null
+      },
+      "retriedSubmissions": 0,
+      "errors": []
+    },
+    "S3": {
+      "scenario": "S3 one validator down",
+      "submitted": 1200,
+      "accepted": 1200,
+      "rejectedAtSubmit": 0,
+      "confirmed": 1200,
+      "confirmedPct": 100,
+      "tps": 18.593846136014015,
+      "latency": {
+        "p50": 4.092994873046875,
+        "p95": 8.524115197753906,
+        "mean": 4.610536326700844,
+        "max": 10.43498828125
+      },
+      "blocks": {
+        "count": 19,
+        "meanTxPerBlock": 63.1578947368421,
+        "maxTxPerBlock": 133,
+        "meanIntervalS": 3.4444444444444446,
+        "maxIntervalS": 6
+      },
+      "retriedSubmissions": 0,
+      "errors": [],
+      "durationS": 60,
+      "stopped": [
+        4
+      ],
+      "rejoinSyncS": 86.72839697265626
+    },
+    "S4": {
+      "scenario": "S4 two validators down",
+      "submitted": 300,
+      "accepted": 300,
+      "rejectedAtSubmit": 0,
+      "confirmed": 300,
+      "confirmedPct": 100,
+      "tps": 1.3515797850894649,
+      "latency": {
+        "p50": 201.7170993652344,
+        "p95": 218.22722565917968,
+        "mean": 202.83156710611993,
+        "max": 221.96247924804686
+      },
+      "blocks": {
+        "count": 2,
+        "meanTxPerBlock": 150,
+        "maxTxPerBlock": 222,
+        "meanIntervalS": 10,
+        "maxIntervalS": 10
+      },
+      "retriedSubmissions": 0,
+      "errors": [],
+      "stopped": [
+        3,
+        4
+      ],
+      "duringOutage": {
+        "confirmed": 0,
+        "confirmedPct": 0,
+        "blocksProduced": 0,
+        "outageS": 25.0165556640625,
+        "tps": 0
+      },
+      "recovery": {
+        "node3RpcUpS": 41.60650146484375,
+        "resumeAfterRestartS": 181.072578125,
+        "confirmedAfterRecovery": 300,
+        "confirmedAfterRecoveryPct": 100
+      }
+    },
+    "S5": {
+      "scenario": "S5 verification (read)",
+      "calls": 1000,
+      "returnedValid": 1000,
+      "latency": {
+        "p50": 0.05365234375,
+        "p95": 0.07459204101562493,
+        "mean": 0.038470751464843744,
+        "max": 1.20687548828125
+      }
+    }
+  },
+  "stabilisation": {
+    "waitedS": 30.571259765625,
+    "atBlock": 27
+  },
+  "contract": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+  "deploymentGas": 2511114,
+  "finishedAt": "2026-10-18T02:54:46.121Z",
+  "blockLog": [
+    {
+      "number": 28,
+      "timestamp": 1792291485,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 29,
+      "timestamp": 1792291487,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 30,
+      "timestamp": 1792291489,
+      "txCount": 1,
+      "gasUsed": 2511114
+    },
+    {
+      "number": 31,
+      "timestamp": 1792291491,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 32,
+      "timestamp": 1792291493,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 33,
+      "timestamp": 1792291495,
+      "txCount": 5,
+      "gasUsed": 753040
+    },
+    {
+      "number": 34,
+      "timestamp": 1792291497,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 35,
+      "timestamp": 1792291499,
+      "txCount": 33,
+      "gasUsed": 4405716
+    },
+    {
+      "number": 36,
+      "timestamp": 1792291502,
+      "txCount": 44,
+      "gasUsed": 5874292
+    },
+    {
+      "number": 37,
+      "timestamp": 1792291504,
+      "txCount": 44,
+      "gasUsed": 5874316
+    },
+    {
+      "number": 38,
+      "timestamp": 1792291507,
+      "txCount": 11,
+      "gasUsed": 1468564
+    },
+    {
+      "number": 39,
+      "timestamp": 1792291509,
+      "txCount": 56,
+      "gasUsed": 7476388
+    },
+    {
+      "number": 40,
+      "timestamp": 1792291511,
+      "txCount": 54,
+      "gasUsed": 7209360
+    },
+    {
+      "number": 41,
+      "timestamp": 1792291513,
+      "txCount": 41,
+      "gasUsed": 5473780
+    },
+    {
+      "number": 42,
+      "timestamp": 1792291515,
+      "txCount": 28,
+      "gasUsed": 3738188
+    },
+    {
+      "number": 43,
+      "timestamp": 1792291517,
+      "txCount": 41,
+      "gasUsed": 5473708
+    },
+    {
+      "number": 44,
+      "timestamp": 1792291519,
+      "txCount": 50,
+      "gasUsed": 6675340
+    },
+    {
+      "number": 45,
+      "timestamp": 1792291521,
+      "txCount": 47,
+      "gasUsed": 6274828
+    },
+    {
+      "number": 46,
+      "timestamp": 1792291523,
+      "txCount": 42,
+      "gasUsed": 5607300
+    },
+    {
+      "number": 47,
+      "timestamp": 1792291525,
+      "txCount": 48,
+      "gasUsed": 6408336
+    },
+    {
+      "number": 48,
+      "timestamp": 1792291527,
+      "txCount": 45,
+      "gasUsed": 6007848
+    },
+    {
+      "number": 49,
+      "timestamp": 1792291529,
+      "txCount": 34,
+      "gasUsed": 4539164
+    },
+    {
+      "number": 50,
+      "timestamp": 1792291531,
+      "txCount": 30,
+      "gasUsed": 4005204
+    },
+    {
+      "number": 51,
+      "timestamp": 1792291533,
+      "txCount": 52,
+      "gasUsed": 6942320
+    },
+    {
+      "number": 52,
+      "timestamp": 1792291536,
+      "txCount": 64,
+      "gasUsed": 8544404
+    },
+    {
+      "number": 53,
+      "timestamp": 1792291538,
+      "txCount": 49,
+      "gasUsed": 6541832
+    },
+    {
+      "number": 54,
+      "timestamp": 1792291540,
+      "txCount": 40,
+      "gasUsed": 5340212
+    },
+    {
+      "number": 55,
+      "timestamp": 1792291542,
+      "txCount": 35,
+      "gasUsed": 4672732
+    },
+    {
+      "number": 56,
+      "timestamp": 1792291544,
+      "txCount": 37,
+      "gasUsed": 4939748
+    },
+    {
+      "number": 57,
+      "timestamp": 1792291546,
+      "txCount": 46,
+      "gasUsed": 6141308
+    },
+    {
+      "number": 58,
+      "timestamp": 1792291548,
+      "txCount": 35,
+      "gasUsed": 4672720
+    },
+    {
+      "number": 59,
+      "timestamp": 1792291550,
+      "txCount": 33,
+      "gasUsed": 4405704
+    },
+    {
+      "number": 60,
+      "timestamp": 1792291552,
+      "txCount": 53,
+      "gasUsed": 7075840
+    },
+    {
+      "number": 61,
+      "timestamp": 1792291554,
+      "txCount": 41,
+      "gasUsed": 5473732
+    },
+    {
+      "number": 62,
+      "timestamp": 1792291556,
+      "txCount": 29,
+      "gasUsed": 3871708
+    },
+    {
+      "number": 63,
+      "timestamp": 1792291558,
+      "txCount": 38,
+      "gasUsed": 5073232
+    },
+    {
+      "number": 64,
+      "timestamp": 1792291560,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 65,
+      "timestamp": 1792291562,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 66,
+      "timestamp": 1792291564,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 67,
+      "timestamp": 1792291566,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 68,
+      "timestamp": 1792291568,
+      "txCount": 60,
+      "gasUsed": 8010384
+    },
+    {
+      "number": 69,
+      "timestamp": 1792291570,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 70,
+      "timestamp": 1792291572,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 71,
+      "timestamp": 1792291574,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 72,
+      "timestamp": 1792291576,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 73,
+      "timestamp": 1792291578,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 74,
+      "timestamp": 1792291584,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 75,
+      "timestamp": 1792291586,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 76,
+      "timestamp": 1792291588,
+      "txCount": 22,
+      "gasUsed": 2937140
+    },
+    {
+      "number": 77,
+      "timestamp": 1792291590,
+      "txCount": 31,
+      "gasUsed": 4138664
+    },
+    {
+      "number": 78,
+      "timestamp": 1792291596,
+      "txCount": 129,
+      "gasUsed": 17222304
+    },
+    {
+      "number": 79,
+      "timestamp": 1792291599,
+      "txCount": 43,
+      "gasUsed": 5740772
+    },
+    {
+      "number": 80,
+      "timestamp": 1792291601,
+      "txCount": 54,
+      "gasUsed": 7209276
+    },
+    {
+      "number": 81,
+      "timestamp": 1792291603,
+      "txCount": 28,
+      "gasUsed": 3738200
+    },
+    {
+      "number": 82,
+      "timestamp": 1792291609,
+      "txCount": 133,
+      "gasUsed": 17756396
+    },
+    {
+      "number": 83,
+      "timestamp": 1792291612,
+      "txCount": 59,
+      "gasUsed": 7876888
+    },
+    {
+      "number": 84,
+      "timestamp": 1792291614,
+      "txCount": 39,
+      "gasUsed": 5206728
+    },
+    {
+      "number": 85,
+      "timestamp": 1792291616,
+      "txCount": 36,
+      "gasUsed": 4806240
+    },
+    {
+      "number": 86,
+      "timestamp": 1792291622,
+      "txCount": 126,
+      "gasUsed": 16821828
+    },
+    {
+      "number": 87,
+      "timestamp": 1792291625,
+      "txCount": 54,
+      "gasUsed": 7209348
+    },
+    {
+      "number": 88,
+      "timestamp": 1792291628,
+      "txCount": 53,
+      "gasUsed": 7075828
+    },
+    {
+      "number": 89,
+      "timestamp": 1792291630,
+      "txCount": 50,
+      "gasUsed": 6675280
+    },
+    {
+      "number": 90,
+      "timestamp": 1792291636,
+      "txCount": 121,
+      "gasUsed": 16154312
+    },
+    {
+      "number": 91,
+      "timestamp": 1792291639,
+      "txCount": 64,
+      "gasUsed": 8544416
+    },
+    {
+      "number": 92,
+      "timestamp": 1792291642,
+      "txCount": 34,
+      "gasUsed": 4539224
+    },
+    {
+      "number": 93,
+      "timestamp": 1792291644,
+      "txCount": 62,
+      "gasUsed": 8277388
+    },
+    {
+      "number": 94,
+      "timestamp": 1792291650,
+      "txCount": 62,
+      "gasUsed": 8277436
+    },
+    {
+      "number": 95,
+      "timestamp": 1792291652,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 96,
+      "timestamp": 1792291654,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 97,
+      "timestamp": 1792291656,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 98,
+      "timestamp": 1792291662,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 99,
+      "timestamp": 1792291664,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 100,
+      "timestamp": 1792291666,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 101,
+      "timestamp": 1792291668,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 102,
+      "timestamp": 1792291674,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 103,
+      "timestamp": 1792291676,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 104,
+      "timestamp": 1792291678,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 105,
+      "timestamp": 1792291680,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 106,
+      "timestamp": 1792291686,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 107,
+      "timestamp": 1792291688,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 108,
+      "timestamp": 1792291690,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 109,
+      "timestamp": 1792291692,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 110,
+      "timestamp": 1792291698,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 111,
+      "timestamp": 1792291700,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 112,
+      "timestamp": 1792291702,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 113,
+      "timestamp": 1792291704,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 114,
+      "timestamp": 1792291710,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 115,
+      "timestamp": 1792291712,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 116,
+      "timestamp": 1792291714,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 117,
+      "timestamp": 1792291716,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 118,
+      "timestamp": 1792291722,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 119,
+      "timestamp": 1792291724,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 120,
+      "timestamp": 1792291726,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 121,
+      "timestamp": 1792291728,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 122,
+      "timestamp": 1792291734,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 123,
+      "timestamp": 1792291736,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 124,
+      "timestamp": 1792291738,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 125,
+      "timestamp": 1792291740,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 126,
+      "timestamp": 1792291742,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 127,
+      "timestamp": 1792291744,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 128,
+      "timestamp": 1792291746,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 129,
+      "timestamp": 1792291748,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 130,
+      "timestamp": 1792291750,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 131,
+      "timestamp": 1792291752,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 132,
+      "timestamp": 1792291754,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 133,
+      "timestamp": 1792291961,
+      "txCount": 222,
+      "gasUsed": 29638392
+    },
+    {
+      "number": 134,
+      "timestamp": 1792291971,
+      "txCount": 78,
+      "gasUsed": 10413468
+    },
+    {
+      "number": 135,
+      "timestamp": 1792291984,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 136,
+      "timestamp": 1792291990,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 137,
+      "timestamp": 1792291992,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 138,
+      "timestamp": 1792291994,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 139,
+      "timestamp": 1792291996,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 140,
+      "timestamp": 1792292002,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 141,
+      "timestamp": 1792292004,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 142,
+      "timestamp": 1792292006,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 143,
+      "timestamp": 1792292008,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 144,
+      "timestamp": 1792292014,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 145,
+      "timestamp": 1792292016,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 146,
+      "timestamp": 1792292018,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 147,
+      "timestamp": 1792292020,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 148,
+      "timestamp": 1792292026,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 149,
+      "timestamp": 1792292028,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 150,
+      "timestamp": 1792292030,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 151,
+      "timestamp": 1792292032,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 152,
+      "timestamp": 1792292038,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 153,
+      "timestamp": 1792292040,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 154,
+      "timestamp": 1792292042,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 155,
+      "timestamp": 1792292044,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 156,
+      "timestamp": 1792292047,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 157,
+      "timestamp": 1792292049,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 158,
+      "timestamp": 1792292051,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 159,
+      "timestamp": 1792292053,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 160,
+      "timestamp": 1792292055,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 161,
+      "timestamp": 1792292057,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 162,
+      "timestamp": 1792292059,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 163,
+      "timestamp": 1792292061,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 164,
+      "timestamp": 1792292063,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 165,
+      "timestamp": 1792292065,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 166,
+      "timestamp": 1792292067,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 167,
+      "timestamp": 1792292069,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 168,
+      "timestamp": 1792292071,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 169,
+      "timestamp": 1792292073,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 170,
+      "timestamp": 1792292075,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 171,
+      "timestamp": 1792292077,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 172,
+      "timestamp": 1792292079,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 173,
+      "timestamp": 1792292081,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 174,
+      "timestamp": 1792292083,
+      "txCount": 0,
+      "gasUsed": 0
+    },
+    {
+      "number": 175,
+      "timestamp": 1792292085,
+      "txCount": 0,
+      "gasUsed": 0
+    }
+  ]
+}

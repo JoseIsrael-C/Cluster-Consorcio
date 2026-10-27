@@ -1,0 +1,28 @@
+{
+  "capturedAt": "2026-10-26T23:51:34.680Z",
+  "host": {
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.30GHz",
+    "cores": 2,
+    "ramGB": 7.8,
+    "os": "Ubuntu 24.04.5 LTS (kernel 6.18.44-fc-v153)",
+    "arch": "x64"
+  },
+  "node": "v22.22.0",
+  "hardhat": "2.29.1",
+  "ethers": "6.17.0",
+  "hardhatToolbox": "5.0.0",
+  "solidityCoverage": "0.8.17",
+  "openzeppelin": "5.0.2",
+  "solc": {
+    "version": "0.8.24",
+    "settings": {
+      "optimizer": {
+        "runs": 200
+      },
+      "evmVersion": "paris"
+    }
+  },
+  "besu": null,
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18",
+  "slither": "0.11.6"
+}

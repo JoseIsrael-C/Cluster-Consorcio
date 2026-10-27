@@ -1,0 +1,27 @@
+
+
+  Baselines (D1, D3) · sanity
+    ✔ D1 prototype contract (verbatim): issue, query, validate, revoke; admin only (384ms)
+    ✔ D3 registry: same rules as D2 without tokens
+
+  CertificateConsortium (D2) · T1–T16
+    ✔ T1 access control: a non-member cannot issue
+    ✔ T2 integrity: verify by hash returns validity, issuer and current campus
+    ✔ T3 integrity: a duplicate hash is rejected, also from another campus
+    ✔ T4 soulbound: transfers revert and locked() is true (ERC-5192)
+    ✔ T5 revocation: only the issuing campus revokes and history is kept
+    ✔ T6 transfers: only the current campus records a transfer
+    ✔ T7 re-issue: issuer only; the new token links to the superseded one
+    ✔ T8 governance: admission needs four fifths (4 of 5), so three campuses cannot admit members
+    ✔ T9 governance: suspension needs four fifths of the other members (three campuses cannot expel)
+    ✔ T10 governance: a suspended campus is readmitted by simple majority
+    ✔ T11 access control: non-members cannot propose or vote; no double voting
+    ✔ T12 governance history: certificates issued before a suspension remain verifiable
+    ✔ T13 identity binding: each campus is bound to its signing certificate; only the campus itself renews it
+    ✔ T14 emergency revocation: a majority of the other campuses invalidates a compromised campus's new certificates; provisional unless a suspension confirms it
+    ✔ T15 input validation: malformed deployments, proposals and transfers are rejected (54ms)
+    ✔ T16 recovery: after readmission, the campus's certificate renewal ends its compromise period
+
+
+  18 passing (681ms)
+
