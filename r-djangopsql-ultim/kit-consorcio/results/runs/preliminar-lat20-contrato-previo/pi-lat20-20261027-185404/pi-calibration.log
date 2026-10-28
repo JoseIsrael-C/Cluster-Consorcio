@@ -1,0 +1,22 @@
+{
+  "piFactorTarget": 0.06732348111658457,
+  "periodMs": 60,
+  "onFactor": 0.17184091660092018,
+  "freeMs": 933.689041,
+  "achievedSpeedRatio": 0.0683786156114085,
+  "equivalentGeekbench6SingleCore": 291,
+  "rounds": [
+    {
+      "onFactor": 0.06732348111658457,
+      "achievedSpeedRatio": 0.02904793982877459
+    },
+    {
+      "onFactor": 0.15603347901338321,
+      "achievedSpeedRatio": 0.061130475707997046
+    },
+    {
+      "onFactor": 0.17184091660092018,
+      "achievedSpeedRatio": 0.0683786156114085
+    }
+  ]
+}

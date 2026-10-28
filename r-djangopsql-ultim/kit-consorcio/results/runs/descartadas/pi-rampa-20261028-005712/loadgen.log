@@ -1,0 +1,3 @@
+Error: network did not stabilise: {"heads":[317,317,317,317,317,317,317,317,317,317],"peers":[9,7,7,7,7,7,7,7,1,1]}
+    at waitStable (/Users/joseisraelcampero/.kit-consorcio-run/scripts/loadgen.js:296:9)
+    at async main (/Users/joseisraelcampero/.kit-consorcio-run/scripts/loadgen.js:309:27)

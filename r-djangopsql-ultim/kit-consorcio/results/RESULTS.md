@@ -2,7 +2,7 @@
 
 ## Table V · tests, coverage, static analysis
 
-- Tests T1–T16 passing: **16 of 16** (whole suite: 18 passing, 0 failing)
+- Tests T1–T17 passing: **17 of 17** (whole suite: 69 passing, 0 failing)
   - T1: pass
   - T2: pass
   - T3: pass
@@ -15,26 +15,34 @@
   - T10: pass
   - T11: pass
   - T12: pass
-- Coverage (CertificateConsortium.sol + ConsortiumGovernance.sol): lines **100.0 %**, branches **88.1 %**, functions 100.0 %, statements 100.0 %
-  - CertificateConsortium.sol: lines 100.0 %, branches 87.5 %
-  - ConsortiumGovernance.sol: lines 100.0 %, branches 88.3 %
-- Slither: 15 findings in all kit contracts {"Low":4,"Informational":11}; **2 in D2 + governance** {"Low":2}
-  - [Low/Medium] timestamp: ConsortiumGovernance._checkCompromiseTime(uint256) (contracts/ConsortiumGovernance.sol#152-154) uses timestamp for comparisons
-  - [Low/Medium] timestamp: ConsortiumGovernance._issuedWhileCompromised(uint8,uint64) (contracts/ConsortiumGovernance.sol#260-269) uses timestamp for comparisons
+  - T13: pass
+  - T14: pass
+  - T15: pass
+  - T16: pass
+  - T17: pass
+- Model-based governance tests: 50 sequences passing; 2741 calls, 1261 predicted reverts, executed proposals by kind [admit, suspend, readmit, rotate, declare] = [20, 15, 5, 39, 32], 18 votes on stale proposals
+- Reference verifier and gateway (python verifier/test_verifier.py): 12 of 12 cases as expected
+- Coverage (CertificateConsortium.sol + ConsortiumGovernance.sol): lines **100.0 %**, branches **91.3 %**, functions 100.0 %, statements 100.0 %
+  - CertificateConsortium.sol: lines 100.0 %, branches 90.6 %
+  - ConsortiumGovernance.sol: lines 100.0 %, branches 91.5 %
+- Slither: 16 findings in all kit contracts {"Low":5,"Informational":11}; **3 in D2 + governance** {"Low":3}
+  - [Low/Medium] timestamp: ConsortiumGovernance._declare(uint8,uint64,bool) (contracts/ConsortiumGovernance.sol#248-253) uses timestamp for comparisons
+  - [Low/Medium] timestamp: ConsortiumGovernance._issuedWhileCompromised(uint8,uint64) (contracts/ConsortiumGovernance.sol#278-287) uses timestamp for comparisons
+  - [Low/Medium] timestamp: ConsortiumGovernance._checkCompromiseTime(uint256) (contracts/ConsortiumGovernance.sol#154-156) uses timestamp for comparisons
 
 ## Table VI · gas per function, mean ± SD over 30 runs (Hardhat Network, London rules, warm-up excluded)
 
 | Function | D1 prototype | D2 proposed | D3 registry |
 |---|---|---|---|
 | issue | 208,880 ± 63.8 | 133,508 ± 2.2 | 100,815 ± 3.7 |
-| recordTransfer | — | 37,991 ± 0.0 | 37,961 ± 0.0 |
+| recordTransfer | — | 37,992 ± 0.0 | 37,962 ± 0.0 |
 | revoke | 26,103 ± 0.0 | 33,028 ± 0.0 | 32,946 ± 0.0 |
 | reissue | — | 164,725 ± 2.2 | — |
-| deployment | 985,932 ± 0.0 | 3,431,405 ± 0.0 | 2,362,608 ± 0.0 |
+| deployment | 985,932 ± 0.0 | 3,515,699 ± 0.0 | 2,446,416 ± 0.0 |
 
 - issue: D2 vs D1 36.1 % (208,880 → 133,508); token-layer overhead D2 − D3 = 32,693 gas (+32.4 %)
 - recordTransfer: D2 vs D1 — %; revoke: D2 vs D1 -26.5 %
-- deployment: D2 − D3 = 1,068,797 gas (ERC-721/ERC-5192 code)
+- deployment: D2 − D3 = 1,069,283 gas (ERC-721/ERC-5192 code)
 - Abstract: issuance uses **[X] = 133,508** gas instead of **[Y] = 208,880**
 
 ## Table VII · last single run, results/network.json (5 validators, 2 s blocks)

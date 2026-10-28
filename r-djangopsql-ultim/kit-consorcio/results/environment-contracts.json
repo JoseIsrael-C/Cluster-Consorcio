@@ -1,10 +1,10 @@
 {
-  "capturedAt": "2026-10-26T23:51:34.680Z",
+  "capturedAt": "2026-10-28T00:31:43.103Z",
   "host": {
     "cpu": "Intel(R) Xeon(R) Processor @ 2.30GHz",
     "cores": 2,
     "ramGB": 7.8,
-    "os": "Ubuntu 24.04.5 LTS (kernel 6.18.44-fc-v153)",
+    "os": "Ubuntu 24.04.5 LTS (kernel 6.18.44-fc-v180)",
     "arch": "x64"
   },
   "node": "v22.22.0",

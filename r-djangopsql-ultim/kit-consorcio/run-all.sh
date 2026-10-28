@@ -41,7 +41,7 @@ say "Compiling contracts (solc 0.8.24)"
 npx hardhat compile 2>&1 | tee "$LOGS/compile.log" || die "compilation failed"
 
 run_contracts() {
-  say "Functional and security tests (T1–T12)"
+  say "Functional and security tests"
   npx hardhat test 2>&1 | tee results/tests.txt
 
   say "Coverage (solidity-coverage)"
@@ -124,19 +124,35 @@ run_network() {
 # Pi 4B core (scripts/throttle.js); campuses submit through their RPC node.
 run_network_pi() {
   setup_besu
+  local LAT="${LATENCY_MS:-0}"
   say "Calibrating the Raspberry Pi 4B CPU emulation"
-  node scripts/throttle.js calibrate | tee "$LOGS/pi-calibration.log"
-  say "Starting 5 Pi-4B clusters: 5 validators + 5 RPC nodes"
+  # A run is valid only if the emulated speed is within ±20 % of a Pi 4B core; retry, then give up.
+  local ok="" attempt
+  for attempt in 1 2 3; do
+    node scripts/throttle.js calibrate | tee "$LOGS/pi-calibration.log"
+    ok=$(node -e 'console.log(require("./results/pi-calibration.json").withinTolerance ? "yes" : "")')
+    [ -n "$ok" ] && break
+    echo "Calibration outside ±20 % of the target (attempt $attempt of 3); retrying"
+  done
+  [ -n "$ok" ] || die "CPU emulation could not be calibrated (host too busy?); run discarded"
+  say "Starting 5 Pi-4B clusters: 5 validators + 5 RPC nodes (inter-campus latency ${LAT} ms one way)"
   bash network/net.sh stop > /dev/null 2>&1
   bash network/net.sh setup || die "genesis generation failed (see network/generated/operator.log)"
-  NODES=10 BESU_OPTS="-Xmx1536m -XX:ActiveProcessorCount=4" bash network/net.sh start || die "network did not start"
+  local PROXY=""
+  if [ "$LAT" -gt 0 ]; then
+    NODES=10 LATENCY_MS="$LAT" node scripts/latency-proxy.js > "$LOGS/latency-proxy.log" 2>&1 &
+    PROXY=$!
+    sleep 1
+  fi
+  NODES=10 LATENCY_MS="$LAT" BESU_OPTS="-Xmx1536m -XX:ActiveProcessorCount=4" bash network/net.sh start || die "network did not start"
   node scripts/throttle.js run > "$LOGS/throttle.log" 2>&1 &
   local THR=$!
   say "Scenarios S1–S5 on the emulated clusters (about 15 minutes)"
-  NODES=10 SUBMIT_BASE=5 BESU_OPTS="-Xmx1536m -XX:ActiveProcessorCount=4" node scripts/loadgen.js 2>&1 | tee "$LOGS/loadgen.log"
+  NODES=10 SUBMIT_BASE=5 LATENCY_MS="$LAT" BESU_OPTS="-Xmx1536m -XX:ActiveProcessorCount=4" node scripts/loadgen.js 2>&1 | tee "$LOGS/loadgen.log"
   kill "$THR" 2>/dev/null; wait "$THR" 2>/dev/null
   cp network/run/throttle-stats.json results/ 2>/dev/null
   NODES=10 bash network/net.sh stop
+  [ -n "$PROXY" ] && kill "$PROXY" 2>/dev/null
 }
 
 case "$MODE" in

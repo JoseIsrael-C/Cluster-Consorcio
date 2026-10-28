@@ -1,0 +1,397 @@
+'npx hardhat clean' running (wd: /home/claude/work/kit3)
+'npx hardhat clean --global' running (wd: /home/claude/work/kit3)
+'npx hardhat compile --force' running (wd: /home/claude/work/kit3)
+
+Detector: events-access
+CertificadosContract.transferirAdmin(address) (contracts/prototype/CertificadosContract.sol#82-84) should emit an event for: 
+	- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83) 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-events-access-control
+
+Detector: missing-zero-check
+CertificadosContract.transferirAdmin(address).nuevoAdmin (contracts/prototype/CertificadosContract.sol#82) lacks a zero-check on :
+		- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+
+Detector: solc-version
+Version constraint ^0.8.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- ^0.8.0 (contracts/prototype/CertificadosContract.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+
+Detector: naming-convention
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._id (contracts/prototype/CertificadosContract.sol#30) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._nombre (contracts/prototype/CertificadosContract.sol#31) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoPaterno (contracts/prototype/CertificadosContract.sol#32) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoMaterno (contracts/prototype/CertificadosContract.sol#33) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._matricula (contracts/prototype/CertificadosContract.sol#34) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._curso (contracts/prototype/CertificadosContract.sol#35) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._fechaEmision (contracts/prototype/CertificadosContract.sol#36) is not in mixedCase
+Parameter CertificadosContract.obtenerCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#50) is not in mixedCase
+Parameter CertificadosContract.validarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#73) is not in mixedCase
+Parameter CertificadosContract.revocarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#77) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+. analyzed (18 contracts with 102 detectors), 13 result(s) found
+'npx hardhat clean' running (wd: /home/claude/work/kit3)
+'npx hardhat clean --global' running (wd: /home/claude/work/kit3)
+'npx hardhat compile --force' running (wd: /home/claude/work/kit3)
+
+Detector: events-access
+CertificadosContract.transferirAdmin(address) (contracts/prototype/CertificadosContract.sol#82-84) should emit an event for: 
+	- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83) 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-events-access-control
+
+Detector: missing-zero-check
+CertificadosContract.transferirAdmin(address).nuevoAdmin (contracts/prototype/CertificadosContract.sol#82) lacks a zero-check on :
+		- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+
+Detector: solc-version
+Version constraint ^0.8.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- ^0.8.0 (contracts/prototype/CertificadosContract.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+
+Detector: naming-convention
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._id (contracts/prototype/CertificadosContract.sol#30) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._nombre (contracts/prototype/CertificadosContract.sol#31) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoPaterno (contracts/prototype/CertificadosContract.sol#32) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoMaterno (contracts/prototype/CertificadosContract.sol#33) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._matricula (contracts/prototype/CertificadosContract.sol#34) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._curso (contracts/prototype/CertificadosContract.sol#35) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._fechaEmision (contracts/prototype/CertificadosContract.sol#36) is not in mixedCase
+Parameter CertificadosContract.obtenerCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#50) is not in mixedCase
+Parameter CertificadosContract.validarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#73) is not in mixedCase
+Parameter CertificadosContract.revocarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#77) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+. analyzed (18 contracts with 102 detectors), 13 result(s) found
+'npx hardhat clean' running (wd: /home/claude/work/kit3)
+'npx hardhat clean --global' running (wd: /home/claude/work/kit3)
+'npx hardhat compile --force' running (wd: /home/claude/work/kit3)
+
+Detector: events-access
+CertificadosContract.transferirAdmin(address) (contracts/prototype/CertificadosContract.sol#82-84) should emit an event for: 
+	- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83) 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-events-access-control
+
+Detector: missing-zero-check
+CertificadosContract.transferirAdmin(address).nuevoAdmin (contracts/prototype/CertificadosContract.sol#82) lacks a zero-check on :
+		- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+
+Detector: timestamp
+ConsortiumGovernance.propose(ConsortiumGovernance.ProposalKind,address,uint8,bytes32) (contracts/ConsortiumGovernance.sol#85-108) uses timestamp for comparisons
+	Dangerous comparisons:
+	- uint256(data) > block.timestamp (contracts/ConsortiumGovernance.sol#97)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+
+Detector: cyclomatic-complexity
+ConsortiumGovernance.propose(ConsortiumGovernance.ProposalKind,address,uint8,bytes32) (contracts/ConsortiumGovernance.sol#85-108) has a high cyclomatic complexity (12).
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#cyclomatic-complexity
+
+Detector: solc-version
+Version constraint ^0.8.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- ^0.8.0 (contracts/prototype/CertificadosContract.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+
+Detector: naming-convention
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._id (contracts/prototype/CertificadosContract.sol#30) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._nombre (contracts/prototype/CertificadosContract.sol#31) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoPaterno (contracts/prototype/CertificadosContract.sol#32) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoMaterno (contracts/prototype/CertificadosContract.sol#33) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._matricula (contracts/prototype/CertificadosContract.sol#34) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._curso (contracts/prototype/CertificadosContract.sol#35) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._fechaEmision (contracts/prototype/CertificadosContract.sol#36) is not in mixedCase
+Parameter CertificadosContract.obtenerCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#50) is not in mixedCase
+Parameter CertificadosContract.validarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#73) is not in mixedCase
+Parameter CertificadosContract.revocarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#77) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+. analyzed (18 contracts with 102 detectors), 15 result(s) found
+'npx hardhat clean' running (wd: /home/claude/work/kit3)
+'npx hardhat clean --global' running (wd: /home/claude/work/kit3)
+'npx hardhat compile --force' running (wd: /home/claude/work/kit3)
+
+Detector: events-access
+CertificadosContract.transferirAdmin(address) (contracts/prototype/CertificadosContract.sol#82-84) should emit an event for: 
+	- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83) 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-events-access-control
+
+Detector: missing-zero-check
+CertificadosContract.transferirAdmin(address).nuevoAdmin (contracts/prototype/CertificadosContract.sol#82) lacks a zero-check on :
+		- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+
+Detector: solc-version
+Version constraint ^0.8.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- ^0.8.0 (contracts/prototype/CertificadosContract.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+
+Detector: naming-convention
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._id (contracts/prototype/CertificadosContract.sol#30) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._nombre (contracts/prototype/CertificadosContract.sol#31) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoPaterno (contracts/prototype/CertificadosContract.sol#32) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoMaterno (contracts/prototype/CertificadosContract.sol#33) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._matricula (contracts/prototype/CertificadosContract.sol#34) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._curso (contracts/prototype/CertificadosContract.sol#35) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._fechaEmision (contracts/prototype/CertificadosContract.sol#36) is not in mixedCase
+Parameter CertificadosContract.obtenerCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#50) is not in mixedCase
+Parameter CertificadosContract.validarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#73) is not in mixedCase
+Parameter CertificadosContract.revocarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#77) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+. analyzed (18 contracts with 102 detectors), 13 result(s) found
+'npx hardhat clean' running (wd: /home/claude/work/kit3)
+'npx hardhat clean --global' running (wd: /home/claude/work/kit3)
+'npx hardhat compile --force' running (wd: /home/claude/work/kit3)
+
+Detector: events-access
+CertificadosContract.transferirAdmin(address) (contracts/prototype/CertificadosContract.sol#82-84) should emit an event for: 
+	- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83) 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-events-access-control
+
+Detector: missing-zero-check
+CertificadosContract.transferirAdmin(address).nuevoAdmin (contracts/prototype/CertificadosContract.sol#82) lacks a zero-check on :
+		- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+
+Detector: timestamp
+ConsortiumGovernance._checkProposal(ConsortiumGovernance.ProposalKind,address,uint8,bytes32) (contracts/ConsortiumGovernance.sol#115-133) uses timestamp for comparisons
+	Dangerous comparisons:
+	- since == 0 || since > block.timestamp || since + MAX_BACKDATE < block.timestamp (contracts/ConsortiumGovernance.sol#131)
+ConsortiumGovernance._issuedWhileCompromised(uint8,uint64) (contracts/ConsortiumGovernance.sol#239-248) uses timestamp for comparisons
+	Dangerous comparisons:
+	- inForce = c.confirmed || block.timestamp < uint256(c.declaredAt) + PROVISIONAL_PERIOD (contracts/ConsortiumGovernance.sol#244)
+	- inPeriod && inForce (contracts/ConsortiumGovernance.sol#245)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+
+Detector: cyclomatic-complexity
+ConsortiumGovernance._checkProposal(ConsortiumGovernance.ProposalKind,address,uint8,bytes32) (contracts/ConsortiumGovernance.sol#115-133) has a high cyclomatic complexity (14).
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#cyclomatic-complexity
+
+Detector: solc-version
+Version constraint ^0.8.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- ^0.8.0 (contracts/prototype/CertificadosContract.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+
+Detector: naming-convention
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._id (contracts/prototype/CertificadosContract.sol#30) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._nombre (contracts/prototype/CertificadosContract.sol#31) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoPaterno (contracts/prototype/CertificadosContract.sol#32) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoMaterno (contracts/prototype/CertificadosContract.sol#33) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._matricula (contracts/prototype/CertificadosContract.sol#34) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._curso (contracts/prototype/CertificadosContract.sol#35) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._fechaEmision (contracts/prototype/CertificadosContract.sol#36) is not in mixedCase
+Parameter CertificadosContract.obtenerCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#50) is not in mixedCase
+Parameter CertificadosContract.validarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#73) is not in mixedCase
+Parameter CertificadosContract.revocarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#77) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+. analyzed (18 contracts with 102 detectors), 16 result(s) found
+'npx hardhat clean' running (wd: /home/claude/work/kit3)
+'npx hardhat clean --global' running (wd: /home/claude/work/kit3)
+'npx hardhat compile --force' running (wd: /home/claude/work/kit3)
+
+Detector: events-access
+CertificadosContract.transferirAdmin(address) (contracts/prototype/CertificadosContract.sol#82-84) should emit an event for: 
+	- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83) 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-events-access-control
+
+Detector: missing-zero-check
+CertificadosContract.transferirAdmin(address).nuevoAdmin (contracts/prototype/CertificadosContract.sol#82) lacks a zero-check on :
+		- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+
+Detector: timestamp
+ConsortiumGovernance._checkCompromiseTime(uint256) (contracts/ConsortiumGovernance.sol#135-137) uses timestamp for comparisons
+	Dangerous comparisons:
+	- since == 0 || since > block.timestamp || since + MAX_BACKDATE < block.timestamp (contracts/ConsortiumGovernance.sol#136)
+ConsortiumGovernance._issuedWhileCompromised(uint8,uint64) (contracts/ConsortiumGovernance.sol#243-252) uses timestamp for comparisons
+	Dangerous comparisons:
+	- inForce = c.confirmed || block.timestamp < uint256(c.declaredAt) + PROVISIONAL_PERIOD (contracts/ConsortiumGovernance.sol#248)
+	- inPeriod && inForce (contracts/ConsortiumGovernance.sol#249)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+
+Detector: cyclomatic-complexity
+ConsortiumGovernance._checkProposal(ConsortiumGovernance.ProposalKind,address,uint8,bytes32) (contracts/ConsortiumGovernance.sol#115-132) has a high cyclomatic complexity (13).
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#cyclomatic-complexity
+
+Detector: solc-version
+Version constraint ^0.8.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- ^0.8.0 (contracts/prototype/CertificadosContract.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+
+Detector: naming-convention
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._id (contracts/prototype/CertificadosContract.sol#30) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._nombre (contracts/prototype/CertificadosContract.sol#31) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoPaterno (contracts/prototype/CertificadosContract.sol#32) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoMaterno (contracts/prototype/CertificadosContract.sol#33) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._matricula (contracts/prototype/CertificadosContract.sol#34) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._curso (contracts/prototype/CertificadosContract.sol#35) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._fechaEmision (contracts/prototype/CertificadosContract.sol#36) is not in mixedCase
+Parameter CertificadosContract.obtenerCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#50) is not in mixedCase
+Parameter CertificadosContract.validarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#73) is not in mixedCase
+Parameter CertificadosContract.revocarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#77) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+. analyzed (18 contracts with 102 detectors), 16 result(s) found
+'npx hardhat clean' running (wd: /home/claude/work/kit3)
+'npx hardhat clean --global' running (wd: /home/claude/work/kit3)
+'npx hardhat compile --force' running (wd: /home/claude/work/kit3)
+
+Detector: events-access
+CertificadosContract.transferirAdmin(address) (contracts/prototype/CertificadosContract.sol#82-84) should emit an event for: 
+	- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83) 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-events-access-control
+
+Detector: missing-zero-check
+CertificadosContract.transferirAdmin(address).nuevoAdmin (contracts/prototype/CertificadosContract.sol#82) lacks a zero-check on :
+		- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+
+Detector: timestamp
+ConsortiumGovernance._checkCompromiseTime(uint256) (contracts/ConsortiumGovernance.sol#152-154) uses timestamp for comparisons
+	Dangerous comparisons:
+	- since == 0 || since > block.timestamp || since + MAX_BACKDATE < block.timestamp (contracts/ConsortiumGovernance.sol#153)
+ConsortiumGovernance._issuedWhileCompromised(uint8,uint64) (contracts/ConsortiumGovernance.sol#260-269) uses timestamp for comparisons
+	Dangerous comparisons:
+	- inForce = c.confirmed || block.timestamp < uint256(c.declaredAt) + PROVISIONAL_PERIOD (contracts/ConsortiumGovernance.sol#265)
+	- inPeriod && inForce (contracts/ConsortiumGovernance.sol#266)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+
+Detector: solc-version
+Version constraint ^0.8.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- ^0.8.0 (contracts/prototype/CertificadosContract.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+
+Detector: naming-convention
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._id (contracts/prototype/CertificadosContract.sol#30) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._nombre (contracts/prototype/CertificadosContract.sol#31) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoPaterno (contracts/prototype/CertificadosContract.sol#32) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoMaterno (contracts/prototype/CertificadosContract.sol#33) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._matricula (contracts/prototype/CertificadosContract.sol#34) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._curso (contracts/prototype/CertificadosContract.sol#35) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._fechaEmision (contracts/prototype/CertificadosContract.sol#36) is not in mixedCase
+Parameter CertificadosContract.obtenerCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#50) is not in mixedCase
+Parameter CertificadosContract.validarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#73) is not in mixedCase
+Parameter CertificadosContract.revocarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#77) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+. analyzed (18 contracts with 102 detectors), 15 result(s) found
+'npx hardhat clean' running (wd: /home/claude/work/kit3)
+'npx hardhat clean --global' running (wd: /home/claude/work/kit3)
+'npx hardhat compile --force' running (wd: /home/claude/work/kit3)
+
+Detector: events-access
+CertificadosContract.transferirAdmin(address) (contracts/prototype/CertificadosContract.sol#82-84) should emit an event for: 
+	- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83) 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-events-access-control
+
+Detector: missing-zero-check
+CertificadosContract.transferirAdmin(address).nuevoAdmin (contracts/prototype/CertificadosContract.sol#82) lacks a zero-check on :
+		- admin = nuevoAdmin (contracts/prototype/CertificadosContract.sol#83)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+
+Detector: timestamp
+ConsortiumGovernance._checkCompromiseTime(uint256) (contracts/ConsortiumGovernance.sol#154-156) uses timestamp for comparisons
+	Dangerous comparisons:
+	- since == 0 || since > block.timestamp || since + MAX_BACKDATE < block.timestamp (contracts/ConsortiumGovernance.sol#155)
+ConsortiumGovernance._declare(uint8,uint64,bool) (contracts/ConsortiumGovernance.sol#248-253) uses timestamp for comparisons
+	Dangerous comparisons:
+	- since < earliest (contracts/ConsortiumGovernance.sol#250)
+ConsortiumGovernance._issuedWhileCompromised(uint8,uint64) (contracts/ConsortiumGovernance.sol#278-287) uses timestamp for comparisons
+	Dangerous comparisons:
+	- inForce = c.confirmed || block.timestamp < uint256(c.declaredAt) + PROVISIONAL_PERIOD (contracts/ConsortiumGovernance.sol#283)
+	- inPeriod && inForce (contracts/ConsortiumGovernance.sol#284)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+
+Detector: solc-version
+Version constraint ^0.8.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- ^0.8.0 (contracts/prototype/CertificadosContract.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+
+Detector: naming-convention
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._id (contracts/prototype/CertificadosContract.sol#30) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._nombre (contracts/prototype/CertificadosContract.sol#31) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoPaterno (contracts/prototype/CertificadosContract.sol#32) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._apellidoMaterno (contracts/prototype/CertificadosContract.sol#33) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._matricula (contracts/prototype/CertificadosContract.sol#34) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._curso (contracts/prototype/CertificadosContract.sol#35) is not in mixedCase
+Parameter CertificadosContract.emitirCertificado(uint256,string,string,string,string,string,string)._fechaEmision (contracts/prototype/CertificadosContract.sol#36) is not in mixedCase
+Parameter CertificadosContract.obtenerCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#50) is not in mixedCase
+Parameter CertificadosContract.validarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#73) is not in mixedCase
+Parameter CertificadosContract.revocarCertificado(uint256)._id (contracts/prototype/CertificadosContract.sol#77) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+. analyzed (18 contracts with 102 detectors), 16 result(s) found

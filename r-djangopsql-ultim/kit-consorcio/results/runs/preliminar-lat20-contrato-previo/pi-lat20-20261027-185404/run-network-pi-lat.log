@@ -1,0 +1,115 @@
+node v22.23.3, npm 10.9.9
+
+[1;34m== Compiling contracts (solc 0.8.24) ==[0m
+Nothing to compile
+openjdk version "25.0.4.1" 2026-08-18 LTS
+besu/v26.10.0/osx-aarch_64/openjdk-java-25
+
+[1;34m== Calibrating the Raspberry Pi 4B CPU emulation ==[0m
+{
+  "piFactorTarget": 0.06732348111658457,
+  "periodMs": 60,
+  "onFactor": 0.17184091660092018,
+  "freeMs": 933.689041,
+  "achievedSpeedRatio": 0.0683786156114085,
+  "equivalentGeekbench6SingleCore": 291,
+  "rounds": [
+    {
+      "onFactor": 0.06732348111658457,
+      "achievedSpeedRatio": 0.02904793982877459
+    },
+    {
+      "onFactor": 0.15603347901338321,
+      "achievedSpeedRatio": 0.061130475707997046
+    },
+    {
+      "onFactor": 0.17184091660092018,
+      "achievedSpeedRatio": 0.0683786156114085
+    }
+  ]
+}
+
+[1;34m== Starting 5 Pi-4B clusters: 5 validators + 5 RPC nodes (inter-campus latency 20 ms one way) ==[0m
+Genesis and 5 validator keys in network/generated (plus keys for RPC nodes 5-9)
+QBFT producing blocks (block 2)
+
+[1;34m== Scenarios S1–S5 on the emulated clusters (about 15 minutes) ==[0m
+Network stable at block 32 after 21 s
+CertificateConsortium deployed at 0x5FbDB2315678afecb367f032d93F642f64180aa3 (3431405 gas)
+S1 steady 20 tx/s            TPS 14.94  p50 6.90 s  p95 19.72 s  confirmed 1200/1200 (100.0 %)
+S2 burst of 60               TPS 9.95  p50 3.74 s  p95 4.29 s  confirmed 60/60 (100.0 %)
+S3 one validator down        TPS 14.50  p50 21.99 s  p95 38.31 s  confirmed 1200/1200 (100.0 %)
+  node 4 back in sync after 68.103892578125 s
+S4 two validators down       TPS 1.36  p50 194.74 s  p95 217.26 s  confirmed 300/300 (100.0 %)
+  outage 25.0 s: 0 confirmed, 0 blocks; blocks resumed 173.9 s after restarting validator 3 (RPC up at 39.23591259765625 s)
+Error: missing revert data (action="call", data=null, reason=null, transaction={ "data": "0x75e3661621c5e6ea30f53be8fb3002eca7489c3ae9599f6c52253ff89864529b35330af1", "to": "0x5FbDB2315678afecb367f032d93F642f64180aa3" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.17.0)
+    at makeError (/Users/joseisraelcampero/.kit-consorcio-run/node_modules/ethers/lib.commonjs/utils/errors.js:137:21)
+    at getBuiltinCallException (/Users/joseisraelcampero/.kit-consorcio-run/node_modules/ethers/lib.commonjs/abi/abi-coder.js:105:37)
+    at AbiCoder.getBuiltinCallException (/Users/joseisraelcampero/.kit-consorcio-run/node_modules/ethers/lib.commonjs/abi/abi-coder.js:206:16)
+    at JsonRpcProvider.getRpcError (/Users/joseisraelcampero/.kit-consorcio-run/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:695:43)
+    at /Users/joseisraelcampero/.kit-consorcio-run/node_modules/ethers/lib.commonjs/providers/provider-jsonrpc.js:302:45
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  code: 'CALL_EXCEPTION',
+  action: 'call',
+  data: null,
+  reason: null,
+  transaction: {
+    to: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+    data: '0x75e3661621c5e6ea30f53be8fb3002eca7489c3ae9599f6c52253ff89864529b35330af1'
+  },
+  invocation: null,
+  revert: null,
+  shortMessage: 'missing revert data',
+  info: {
+    error: { code: -32603, message: 'Internal error' },
+    payload: { method: 'eth_call', params: [Array], id: 1004, jsonrpc: '2.0' }
+  }
+}
+run-all.sh: line 158:  7093 Terminated: 15          NODES=10 LATENCY_MS="$LAT" node scripts/latency-proxy.js > "$LOGS/latency-proxy.log" 2>&1
+
+[1;34m== Summary (results/RESULTS.md) ==[0m
+# Results for integration
+
+## Table V · tests, coverage, static analysis
+
+- Tests T1–T12 passing: **12 of 12** (whole suite: 14 passing, 0 failing)
+  - T1: pass
+  - T2: pass
+  - T3: pass
+  - T4: pass
+  - T5: pass
+  - T6: pass
+  - T7: pass
+  - T8: pass
+  - T9: pass
+  - T10: pass
+  - T11: pass
+  - T12: pass
+- Coverage (CertificateConsortium.sol + ConsortiumGovernance.sol): lines **100.0 %**, branches **65.5 %**, functions 100.0 %, statements 100.0 %
+  - CertificateConsortium.sol: lines 100.0 %, branches 75.0 %
+  - ConsortiumGovernance.sol: lines 100.0 %, branches 59.6 %
+- Slither: 1 findings in all kit contracts {"Optimization":1}; **0 in D2 + governance** {}
+
+## Table VI · gas per function, mean ± SD over 30 runs (Hardhat Network, London rules, warm-up excluded)
+
+| Function | D1 prototype | D2 proposed | D3 registry |
+|---|---|---|---|
+| issue | 374,759 ± 13604.2 | 133,508 ± 0.0 | 100,798 ± 2.2 |
+| recordTransfer | 42,532 ± 0.0 | 37,924 ± 0.0 | 37,961 ± 0.0 |
+| revoke | 27,190 ± 0.0 | 32,983 ± 0.0 | 33,012 ± 0.0 |
+| reissue | — | 164,745 ± 5.8 | — |
+| deployment | 826,519 ± 0.0 | 2,511,114 ± 0.0 | 1,434,927 ± 0.0 |
+
+- issue: D2 vs D1 64.4 % (374,759 → 133,508); token-layer overhead D2 − D3 = 32,710 gas (+32.5 %)
+- recordTransfer: D2 vs D1 10.8 %; revoke: D2 vs D1 -21.3 %
+- deployment: D2 − D3 = 1,076,187 gas (ERC-721/ERC-5192 code)
+- Abstract: issuance uses **[X] = 133,508** gas instead of **[Y] = 374,759**
+
+## Table IV · environment
+
+| Host (CPU, RAM, OS) | Apple M5 · Mac17,2, 10 cores, 16 GB RAM, macOS 27.0.1 (26A434) |
+| Node.js / Hardhat / ethers | v22.23.3 / 2.29.1 / 6.17.0 |
+| solc / optimizer | 0.8.24 / enabled, 200 runs (EVM paris) |
+| OpenZeppelin Contracts | 5.0.2 |
+| Hyperledger Besu | besu/v26.10.0/osx-aarch_64/openjdk-java-25; openjdk version "25.0.4.1" 2026-08-18 LTS; QBFT, 2 s blocks, 5 validators + 5 RPC nodes |
+| solidity-coverage / Slither | 0.8.17 / null |

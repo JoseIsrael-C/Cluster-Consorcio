@@ -80,6 +80,7 @@ abstract contract ConsortiumGovernance {
     error InvalidData();
     error AlreadyVoted();
     error ProposalClosed();
+    error StaleProposal();
 
     modifier onlyActiveMember() {
         if (!members[msg.sender].active) revert NotActiveMember();
@@ -142,6 +143,7 @@ abstract contract ConsortiumGovernance {
         if (target == msg.sender) revert InvalidTarget();
         if (kind == ProposalKind.Suspend) {
             if (!m.active) revert InvalidTarget();
+            if (data != bytes32(0)) _checkCompromiseTime(uint256(data));
         } else {
             if (!m.exists) revert InvalidTarget();
             _checkCompromiseTime(uint256(data));
@@ -180,6 +182,7 @@ abstract contract ConsortiumGovernance {
         if (hasVoted[id][msg.sender]) revert AlreadyVoted();
         bool againstTarget = p.kind == ProposalKind.Suspend || p.kind == ProposalKind.DeclareCompromise;
         if (againstTarget && p.target == msg.sender) revert InvalidTarget();
+        _checkStillApplicable(p);
         hasVoted[id][msg.sender] = true;
         p.yesVotes += 1;
         emit VoteCast(id, msg.sender);
@@ -187,6 +190,18 @@ abstract contract ConsortiumGovernance {
         if (!_passed(p)) return;
         p.executed = true;
         _execute(p);
+    }
+
+    /// @dev A proposal whose target is no longer in the required state (e.g. a second suspension of a campus that
+    ///      another proposal already suspended) cannot collect votes, so it can never execute twice.
+    function _checkStillApplicable(Proposal storage p) private view {
+        Member memory m = members[p.target];
+        bool ok;
+        if (p.kind == ProposalKind.Admit) ok = !m.exists && campusAccount[p.campusId] == address(0);
+        else if (p.kind == ProposalKind.Readmit) ok = m.exists && !m.active;
+        else if (p.kind == ProposalKind.DeclareCompromise) ok = m.exists;
+        else ok = m.active; // Suspend, RotateCert
+        if (!ok) revert StaleProposal();
     }
 
     function _passed(Proposal storage p) private view returns (bool) {
@@ -229,7 +244,10 @@ abstract contract ConsortiumGovernance {
         }
     }
 
+    /// @dev A declaration that executes late never reaches further back than MAX_BACKDATE from its execution.
     function _declare(uint8 campus, uint64 since, bool confirmed) private {
+        uint64 earliest = uint64(block.timestamp) - MAX_BACKDATE;
+        if (since < earliest) since = earliest;
         _compromises[campus].push(Compromise(since, 0, uint64(block.timestamp), confirmed));
         emit CampusCompromised(campus, since, confirmed);
     }

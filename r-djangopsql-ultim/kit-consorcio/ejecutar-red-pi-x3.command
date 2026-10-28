@@ -1,8 +1,10 @@
 #!/bin/bash
 # Doble clic en Finder: emula 5 clústeres (uno por plantel) de 5 Raspberry Pi 4B de 4 GB y corre tres veces
-# los escenarios S1–S5 con una red nueva cada vez. Cada corrida queda en results/runs/pi-<fecha-hora>/.
+# los escenarios S1–S5 y la rampa de saturación S6 con una red nueva cada vez. Cada corrida queda en
+# results/runs/pi-<fecha-hora>/. caffeinate mantiene la Mac despierta mientras corre.
 SRC="$(cd "$(dirname "$0")" && pwd)"
 RUN="$HOME/.kit-consorcio-run"
+caffeinate -dims -w $$ &
 for i in 1 2 3; do
   echo "================ Corrida $i de 3 (Raspberry Pi 4B emulada) ================"
   mkdir -p "$RUN" "$SRC/results/logs"

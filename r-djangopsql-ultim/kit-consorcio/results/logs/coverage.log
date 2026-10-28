@@ -1,0 +1,120 @@
+
+Version
+=======
+> solidity-coverage: v0.8.17
+
+Instrumenting for coverage...
+=============================
+
+> CertificateConsortium.sol
+> ConsortiumGovernance.sol
+
+Coverage skipped for:
+=====================
+
+> HashRegistry.sol
+> IERC5192.sol
+> prototype/CertificadosContract.sol
+
+Compilation:
+============
+
+Compiled 16 Solidity files successfully (evm target: paris).
+
+Network Info
+============
+> HardhatEVM: v2.29.1
+> network:    hardhat
+
+
+
+  Baselines (D1, D3) · sanity
+    ✔ D1 prototype contract (verbatim): issue, query, validate, revoke; admin only (83ms)
+    ✔ D3 registry: same rules as D2 without tokens (65ms)
+
+  CertificateConsortium (D2) · T1–T17
+    ✔ T1 access control: a non-member cannot issue (55ms)
+    ✔ T2 integrity: verify by hash returns validity, issuer and current campus
+    ✔ T3 integrity: a duplicate hash is rejected, also from another campus
+    ✔ T4 soulbound: transfers revert and locked() is true (ERC-5192)
+    ✔ T5 revocation: only the issuing campus revokes and history is kept
+    ✔ T6 transfers: only the current campus records a transfer
+    ✔ T7 re-issue: issuer only; the new token links to the superseded one
+    ✔ T8 governance: admission needs four fifths (4 of 5), so three campuses cannot admit members
+    ✔ T9 governance: suspension needs four fifths of the other members (three campuses cannot expel) (80ms)
+    ✔ T10 governance: a suspended campus is readmitted by simple majority (47ms)
+    ✔ T11 access control: non-members cannot propose or vote; no double voting
+    ✔ T12 governance history: certificates issued before a suspension remain verifiable
+    ✔ T13 identity binding: each campus is bound to its signing certificate; only the campus itself renews it (50ms)
+    ✔ T14 emergency revocation: a majority of the other campuses invalidates a compromised campus's new certificates; provisional unless a suspension confirms it (123ms)
+    ✔ T15 input validation: malformed deployments, proposals and transfers are rejected (132ms)
+    ✔ T16 recovery: after readmission, the campus's certificate renewal ends its compromise period (66ms)
+    ✔ T17 found by the model-based tests: stale proposals cannot execute and no declaration reaches back more than 7 days (81ms)
+
+  Governance state machine · model-based property tests (50 sequences × 60 steps, seed 20271027)
+    ✔ P1–P7 hold for sequence 1 (seed 20271027) (3174ms)
+    ✔ P1–P7 hold for sequence 2 (seed 20271028) (2389ms)
+    ✔ P1–P7 hold for sequence 3 (seed 20271029) (2417ms)
+    ✔ P1–P7 hold for sequence 4 (seed 20271030) (1840ms)
+    ✔ P1–P7 hold for sequence 5 (seed 20271031) (2820ms)
+    ✔ P1–P7 hold for sequence 6 (seed 20271032) (3188ms)
+    ✔ P1–P7 hold for sequence 7 (seed 20271033) (2981ms)
+    ✔ P1–P7 hold for sequence 8 (seed 20271034) (2401ms)
+    ✔ P1–P7 hold for sequence 9 (seed 20271035) (2760ms)
+    ✔ P1–P7 hold for sequence 10 (seed 20271036) (2418ms)
+    ✔ P1–P7 hold for sequence 11 (seed 20271037) (1772ms)
+    ✔ P1–P7 hold for sequence 12 (seed 20271038) (2285ms)
+    ✔ P1–P7 hold for sequence 13 (seed 20271039) (2868ms)
+    ✔ P1–P7 hold for sequence 14 (seed 20271040) (2050ms)
+    ✔ P1–P7 hold for sequence 15 (seed 20271041) (3107ms)
+    ✔ P1–P7 hold for sequence 16 (seed 20271042) (2505ms)
+    ✔ P1–P7 hold for sequence 17 (seed 20271043) (2286ms)
+    ✔ P1–P7 hold for sequence 18 (seed 20271044) (2527ms)
+    ✔ P1–P7 hold for sequence 19 (seed 20271045) (2995ms)
+    ✔ P1–P7 hold for sequence 20 (seed 20271046) (2543ms)
+    ✔ P1–P7 hold for sequence 21 (seed 20271047) (2944ms)
+    ✔ P1–P7 hold for sequence 22 (seed 20271048) (2369ms)
+    ✔ P1–P7 hold for sequence 23 (seed 20271049) (2335ms)
+    ✔ P1–P7 hold for sequence 24 (seed 20271050) (2416ms)
+    ✔ P1–P7 hold for sequence 25 (seed 20271051) (2860ms)
+    ✔ P1–P7 hold for sequence 26 (seed 20271052) (2661ms)
+    ✔ P1–P7 hold for sequence 27 (seed 20271053) (2593ms)
+    ✔ P1–P7 hold for sequence 28 (seed 20271054) (2147ms)
+    ✔ P1–P7 hold for sequence 29 (seed 20271055) (2556ms)
+    ✔ P1–P7 hold for sequence 30 (seed 20271056) (2939ms)
+    ✔ P1–P7 hold for sequence 31 (seed 20271057) (3213ms)
+    ✔ P1–P7 hold for sequence 32 (seed 20271058) (2107ms)
+    ✔ P1–P7 hold for sequence 33 (seed 20271059) (1999ms)
+    ✔ P1–P7 hold for sequence 34 (seed 20271060) (2655ms)
+    ✔ P1–P7 hold for sequence 35 (seed 20271061) (2239ms)
+    ✔ P1–P7 hold for sequence 36 (seed 20271062) (2635ms)
+    ✔ P1–P7 hold for sequence 37 (seed 20271063) (1872ms)
+    ✔ P1–P7 hold for sequence 38 (seed 20271064) (2038ms)
+    ✔ P1–P7 hold for sequence 39 (seed 20271065) (2372ms)
+    ✔ P1–P7 hold for sequence 40 (seed 20271066) (2230ms)
+    ✔ P1–P7 hold for sequence 41 (seed 20271067) (3483ms)
+    ✔ P1–P7 hold for sequence 42 (seed 20271068) (3036ms)
+    ✔ P1–P7 hold for sequence 43 (seed 20271069) (2726ms)
+    ✔ P1–P7 hold for sequence 44 (seed 20271070) (2595ms)
+    ✔ P1–P7 hold for sequence 45 (seed 20271071) (1904ms)
+    ✔ P1–P7 hold for sequence 46 (seed 20271072) (2785ms)
+    ✔ P1–P7 hold for sequence 47 (seed 20271073) (2887ms)
+    ✔ P1–P7 hold for sequence 48 (seed 20271074) (2156ms)
+    ✔ P1–P7 hold for sequence 49 (seed 20271075) (2922ms)
+    ✔ P1–P7 hold for sequence 50 (seed 20271076) (2838ms)
+      model-based tests: 2741 calls, 1261 predicted reverts, executed proposals by kind [admit, suspend, readmit, rotate, declare] = [20, 15, 5, 39, 32], 18 votes on stale proposals
+
+
+  69 passing (2m)
+
+----------------------------|----------|----------|----------|----------|----------------|
+File                        |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+----------------------------|----------|----------|----------|----------|----------------|
+ contracts/                 |      100 |     91.3 |      100 |      100 |                |
+  CertificateConsortium.sol |      100 |    90.63 |      100 |      100 |                |
+  ConsortiumGovernance.sol  |      100 |    91.51 |      100 |      100 |                |
+----------------------------|----------|----------|----------|----------|----------------|
+All files                   |      100 |     91.3 |      100 |      100 |                |
+----------------------------|----------|----------|----------|----------|----------------|
+
+> Istanbul reports written to ./coverage/ and ./coverage.json

@@ -31,7 +31,12 @@ const sl = read("slither.json");
 out.push("# Results for integration\n");
 out.push("## Table V · tests, coverage, static analysis\n");
 out.push(`- Tests T1–T${tPass.size} passing: **${tPass.size} of ${tPass.size}** (whole suite: ${passing} passing, ${failing} failing)`);
-for (let t = 1; t <= 12; t++) out.push(`  - T${t}: ${tPass.has(t) ? "pass" : "FAIL / not run"}`);
+for (let t = 1; t <= 17; t++) out.push(`  - T${t}: ${tPass.has(t) ? "pass" : "FAIL / not run"}`);
+const pbt = testsTxt.match(/model-based tests: \d+ calls.*/);
+const pbtPass = [...testsTxt.matchAll(/(?:✔|✓)\s+P1–P7 hold/g)].length;
+if (pbt) out.push(`- Model-based governance tests: ${pbtPass} sequences passing; ${pbt[0].replace("model-based tests: ", "")}`);
+const vt = read("verifier-test.json");
+if (vt) out.push(`- Reference verifier and gateway (python verifier/test_verifier.py): ${vt.filter((c) => c.asExpected).length} of ${vt.length} cases as expected`);
 if (cov) {
   out.push(`- Coverage (CertificateConsortium.sol + ConsortiumGovernance.sol): lines **${f(cov.total.lines.pct, 1)} %**, branches **${f(cov.total.branches.pct, 1)} %**, functions ${f(cov.total.functions.pct, 1)} %, statements ${f(cov.total.statements.pct, 1)} %`);
   for (const [file, v] of Object.entries(cov)) {

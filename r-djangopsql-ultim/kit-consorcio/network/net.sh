@@ -5,6 +5,9 @@
 #   bash network/net.sh stop-node <0-4>  /  start-node <0-4>
 # Node i: RPC http://127.0.0.1:(8545+i), P2P 127.0.0.1:(30303+i). Nodes 0-4 are validators; with NODES=10,
 # nodes 5-9 are non-validating RPC nodes (one per campus). Requires `besu` (Java 25 for Besu 26.x) in PATH.
+# LATENCY_MS>0: discovery off; every node reaches the others through scripts/latency-proxy.js (static nodes),
+# which adds LATENCY_MS one way between campuses. With STATIC_NODES=1 (default) and no latency, discovery is also
+# off and every node gets the others' addresses directly (the bootnode-only discovery left a node with one peer).
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$DIR/.." && pwd)"
@@ -14,6 +17,8 @@ N=5                     # QBFT validators (one per campus)
 NODES="${NODES:-5}"     # total Besu nodes; 10 = one validator + one RPC node per campus cluster
 CHAIN_ID=2027
 export BESU_OPTS="${BESU_OPTS:--Xmx768m}"
+LATENCY_MS="${LATENCY_MS:-0}"
+STATIC_NODES="${STATIC_NODES:-1}" # 1: every node gets the full peer list (no reliance on discovery)
 
 rpc_block() {
   curl -s -m 2 -X POST -H 'Content-Type: application/json' \
@@ -59,7 +64,16 @@ JSON
     basename "$d" > "$GEN/node$i/address"
     i=$((i + 1))
   done
-  echo "Genesis and $i validator keys in network/generated"
+  # keys for the non-validating RPC nodes, so that every enode is known in advance (static nodes)
+  (cd "$ROOT" && node -e '
+    const { ethers } = require("ethers"); const fs = require("fs"); const path = require("path");
+    for (let k = 5; k < 10; k++) {
+      const d = path.join(process.argv[1], "node" + k); fs.mkdirSync(d, { recursive: true });
+      const w = ethers.Wallet.createRandom();
+      fs.writeFileSync(path.join(d, "key"), w.privateKey);
+      fs.writeFileSync(path.join(d, "key.pub"), "0x" + w.signingKey.publicKey.slice(4));
+    }' "$GEN")
+  echo "Genesis and $i validator keys in network/generated (plus keys for RPC nodes 5-9)"
 }
 
 bootnode() {
@@ -67,12 +81,30 @@ bootnode() {
   echo "enode://$pub@127.0.0.1:30303"
 }
 
+static_nodes() {
+  # static-nodes file for node $1: every other node, through its latency relay when LATENCY_MS>0, else directly
+  local a=$1 b port out="$RUN/static-nodes-$1.json" sep=""
+  printf '[' > "$out"
+  for b in $(seq 0 $((NODES - 1))); do
+    [ "$b" -eq "$a" ] && continue
+    if [ "$LATENCY_MS" -gt 0 ]; then port=$((40000 + 16 * a + b)); else port=$((30303 + b)); fi
+    printf '%s"enode://%s@127.0.0.1:%d"' "$sep" "$(sed 's/^0x//' "$GEN/node$b/key.pub")" "$port" >> "$out"
+    sep=","
+  done
+  printf ']' >> "$out"
+  echo "$out"
+}
+
 start_node() {
   local i=$1
   if [ -f "$RUN/node$i.pid" ] && kill -0 "$(cat "$RUN/node$i.pid")" 2>/dev/null; then return 0; fi
   mkdir -p "$RUN"
   local boot=""
-  if [ "$i" -ne 0 ]; then boot="--bootnodes=$(bootnode)"; fi
+  if [ "$LATENCY_MS" -gt 0 ] || [ "$STATIC_NODES" = 1 ]; then
+    boot="--discovery-enabled=false --static-nodes-file=$(static_nodes "$i")"
+  elif [ "$i" -ne 0 ]; then
+    boot="--bootnodes=$(bootnode)"
+  fi
   local keyopt=""
   if [ -f "$GEN/node$i/key" ]; then keyopt="--node-private-key-file=$GEN/node$i/key"; fi
   nohup besu \

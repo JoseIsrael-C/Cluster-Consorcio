@@ -87,17 +87,29 @@ async function benchThrottled() {
   return { wall, duty: await duty };
 }
 
+// The achieved speed is a steep, non-linear function of the duty cycle (short "on" slices lose a large share to
+// signal and scheduling overhead), so the calibration brackets the target and interpolates linearly for up to
+// CAL_ROUNDS rounds, stopping within 7 %. withinTolerance (±20 %) tells run-all.sh whether to retry.
 async function calibrate() {
   const free = [benchFree(), benchFree(), benchFree()].sort((a, b) => a - b)[1];
+  const MAX_ROUNDS = Number(process.env.CAL_ROUNDS || 8);
+  let lo = null; // {on, ratio} with ratio < target
+  let hi = null; // {on, ratio} with ratio >= target
   ON_FACTOR = FACTOR;
-  let thr;
   const rounds = [];
-  for (let round = 0; round < 3; round++) {
-    thr = await benchThrottled();
+  for (let round = 0; round < MAX_ROUNDS; round++) {
+    const thr = await benchThrottled();
     const ratio = free / thr.wall;
     rounds.push({ onFactor: ON_FACTOR, achievedSpeedRatio: ratio });
-    if (Math.abs(ratio - FACTOR) / FACTOR < 0.05) break;
-    ON_FACTOR = Math.min(0.5, ON_FACTOR * (FACTOR / ratio));
+    if (Math.abs(ratio - FACTOR) / FACTOR < 0.07) break;
+    if (ratio < FACTOR) lo = { on: ON_FACTOR, ratio };
+    else hi = { on: ON_FACTOR, ratio };
+    if (lo && hi) {
+      const t = (FACTOR - lo.ratio) / (hi.ratio - lo.ratio);
+      ON_FACTOR = lo.on + Math.min(0.9, Math.max(0.1, t)) * (hi.on - lo.on); // regula falsi, kept inside the bracket
+    } else {
+      ON_FACTOR = Math.min(0.9, Math.max(0.01, ON_FACTOR * Math.min(4, Math.max(0.25, FACTOR / ratio))));
+    }
   }
   const last = rounds.reduce((b, r) => (Math.abs(r.achievedSpeedRatio - FACTOR) < Math.abs(b.achievedSpeedRatio - FACTOR) ? r : b));
   const res = {
@@ -107,6 +119,7 @@ async function calibrate() {
     freeMs: free,
     achievedSpeedRatio: last.achievedSpeedRatio,
     equivalentGeekbench6SingleCore: Math.round(last.achievedSpeedRatio * 4263),
+    withinTolerance: Math.abs(last.achievedSpeedRatio - FACTOR) / FACTOR <= 0.2,
     rounds,
   };
   console.log(JSON.stringify(res, null, 2));

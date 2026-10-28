@@ -1,0 +1,16 @@
+D2  deployment        3515699 ± 0.0
+D2  issue              133508 ± 2.2
+D2  recordTransfer      37992 ± 0.0
+D2  revoke              33028 ± 0.0
+D2  reissue            164725 ± 2.2
+D3  deployment        2446416 ± 0.0
+D3  issue              100815 ± 3.7
+D3  recordTransfer      37962 ± 0.0
+D3  revoke              32946 ± 0.0
+D1  deployment         985932 ± 0.0
+D1  issueDocument      267649 ± 29058.0
+D1  issue              208880 ± 63.8
+D1  revoke              26103 ± 0.0
+D1 issuances above the prototype's 300,000 gas limit: 3/30 (pattern A), 0/30 (pattern B)
+
+Saved results/gas-hardhat.json and .csv

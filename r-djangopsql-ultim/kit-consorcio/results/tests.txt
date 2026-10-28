@@ -1,10 +1,10 @@
 
 
   Baselines (D1, D3) · sanity
-    ✔ D1 prototype contract (verbatim): issue, query, validate, revoke; admin only (384ms)
+    ✔ D1 prototype contract (verbatim): issue, query, validate, revoke; admin only (536ms)
     ✔ D3 registry: same rules as D2 without tokens
 
-  CertificateConsortium (D2) · T1–T16
+  CertificateConsortium (D2) · T1–T17
     ✔ T1 access control: a non-member cannot issue
     ✔ T2 integrity: verify by hash returns validity, issuer and current campus
     ✔ T3 integrity: a duplicate hash is rejected, also from another campus
@@ -18,10 +18,64 @@
     ✔ T11 access control: non-members cannot propose or vote; no double voting
     ✔ T12 governance history: certificates issued before a suspension remain verifiable
     ✔ T13 identity binding: each campus is bound to its signing certificate; only the campus itself renews it
-    ✔ T14 emergency revocation: a majority of the other campuses invalidates a compromised campus's new certificates; provisional unless a suspension confirms it
-    ✔ T15 input validation: malformed deployments, proposals and transfers are rejected (54ms)
+    ✔ T14 emergency revocation: a majority of the other campuses invalidates a compromised campus's new certificates; provisional unless a suspension confirms it (43ms)
+    ✔ T15 input validation: malformed deployments, proposals and transfers are rejected (61ms)
     ✔ T16 recovery: after readmission, the campus's certificate renewal ends its compromise period
+    ✔ T17 found by the model-based tests: stale proposals cannot execute and no declaration reaches back more than 7 days
+
+  Governance state machine · model-based property tests (50 sequences × 60 steps, seed 20271027)
+    ✔ P1–P7 hold for sequence 1 (seed 20271027) (1828ms)
+    ✔ P1–P7 hold for sequence 2 (seed 20271028) (1388ms)
+    ✔ P1–P7 hold for sequence 3 (seed 20271029) (1326ms)
+    ✔ P1–P7 hold for sequence 4 (seed 20271030) (949ms)
+    ✔ P1–P7 hold for sequence 5 (seed 20271031) (1549ms)
+    ✔ P1–P7 hold for sequence 6 (seed 20271032) (1624ms)
+    ✔ P1–P7 hold for sequence 7 (seed 20271033) (1532ms)
+    ✔ P1–P7 hold for sequence 8 (seed 20271034) (1295ms)
+    ✔ P1–P7 hold for sequence 9 (seed 20271035) (1461ms)
+    ✔ P1–P7 hold for sequence 10 (seed 20271036) (1388ms)
+    ✔ P1–P7 hold for sequence 11 (seed 20271037) (921ms)
+    ✔ P1–P7 hold for sequence 12 (seed 20271038) (1289ms)
+    ✔ P1–P7 hold for sequence 13 (seed 20271039) (1521ms)
+    ✔ P1–P7 hold for sequence 14 (seed 20271040) (1121ms)
+    ✔ P1–P7 hold for sequence 15 (seed 20271041) (1715ms)
+    ✔ P1–P7 hold for sequence 16 (seed 20271042) (1486ms)
+    ✔ P1–P7 hold for sequence 17 (seed 20271043) (1336ms)
+    ✔ P1–P7 hold for sequence 18 (seed 20271044) (1458ms)
+    ✔ P1–P7 hold for sequence 19 (seed 20271045) (1689ms)
+    ✔ P1–P7 hold for sequence 20 (seed 20271046) (1480ms)
+    ✔ P1–P7 hold for sequence 21 (seed 20271047) (1589ms)
+    ✔ P1–P7 hold for sequence 22 (seed 20271048) (1283ms)
+    ✔ P1–P7 hold for sequence 23 (seed 20271049) (1148ms)
+    ✔ P1–P7 hold for sequence 24 (seed 20271050) (1227ms)
+    ✔ P1–P7 hold for sequence 25 (seed 20271051) (1490ms)
+    ✔ P1–P7 hold for sequence 26 (seed 20271052) (1436ms)
+    ✔ P1–P7 hold for sequence 27 (seed 20271053) (1456ms)
+    ✔ P1–P7 hold for sequence 28 (seed 20271054) (1225ms)
+    ✔ P1–P7 hold for sequence 29 (seed 20271055) (1332ms)
+    ✔ P1–P7 hold for sequence 30 (seed 20271056) (1515ms)
+    ✔ P1–P7 hold for sequence 31 (seed 20271057) (1696ms)
+    ✔ P1–P7 hold for sequence 32 (seed 20271058) (1195ms)
+    ✔ P1–P7 hold for sequence 33 (seed 20271059) (1218ms)
+    ✔ P1–P7 hold for sequence 34 (seed 20271060) (1538ms)
+    ✔ P1–P7 hold for sequence 35 (seed 20271061) (1405ms)
+    ✔ P1–P7 hold for sequence 36 (seed 20271062) (1459ms)
+    ✔ P1–P7 hold for sequence 37 (seed 20271063) (1021ms)
+    ✔ P1–P7 hold for sequence 38 (seed 20271064) (1105ms)
+    ✔ P1–P7 hold for sequence 39 (seed 20271065) (1153ms)
+    ✔ P1–P7 hold for sequence 40 (seed 20271066) (1049ms)
+    ✔ P1–P7 hold for sequence 41 (seed 20271067) (1535ms)
+    ✔ P1–P7 hold for sequence 42 (seed 20271068) (1439ms)
+    ✔ P1–P7 hold for sequence 43 (seed 20271069) (1247ms)
+    ✔ P1–P7 hold for sequence 44 (seed 20271070) (1335ms)
+    ✔ P1–P7 hold for sequence 45 (seed 20271071) (910ms)
+    ✔ P1–P7 hold for sequence 46 (seed 20271072) (1385ms)
+    ✔ P1–P7 hold for sequence 47 (seed 20271073) (1572ms)
+    ✔ P1–P7 hold for sequence 48 (seed 20271074) (1209ms)
+    ✔ P1–P7 hold for sequence 49 (seed 20271075) (1573ms)
+    ✔ P1–P7 hold for sequence 50 (seed 20271076) (1539ms)
+      model-based tests: 2741 calls, 1261 predicted reverts, executed proposals by kind [admit, suspend, readmit, rotate, declare] = [20, 15, 5, 39, 32], 18 votes on stale proposals
 
 
-  18 passing (681ms)
+  69 passing (1m)
 

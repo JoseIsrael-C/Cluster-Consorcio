@@ -1,0 +1,91 @@
+node v22.23.3, npm 10.9.9
+
+[1;34m== Compiling contracts (solc 0.8.24) ==[0m
+Nothing to compile
+openjdk version "25.0.4.1" 2026-08-18 LTS
+besu/v26.10.0/osx-aarch_64/openjdk-java-25
+
+[1;34m== Calibrating the Raspberry Pi 4B CPU emulation ==[0m
+{
+  "piFactorTarget": 0.06732348111658457,
+  "periodMs": 60,
+  "onFactor": 0.21378998731255572,
+  "freeMs": 912.575584,
+  "achievedSpeedRatio": 0.06600265245401901,
+  "equivalentGeekbench6SingleCore": 281,
+  "rounds": [
+    {
+      "onFactor": 0.06732348111658457,
+      "achievedSpeedRatio": 0.019280997976163144
+    },
+    {
+      "onFactor": 0.2350734705360444,
+      "achievedSpeedRatio": 0.07402575094176984
+    },
+    {
+      "onFactor": 0.21378998731255572,
+      "achievedSpeedRatio": 0.06600265245401901
+    }
+  ]
+}
+
+[1;34m== Starting 5 Pi-4B clusters: 5 validators + 5 RPC nodes (inter-campus latency 0 ms one way) ==[0m
+Genesis and 5 validator keys in network/generated (plus keys for RPC nodes 5-9)
+QBFT producing blocks (block 2)
+
+[1;34m== Scenarios S1–S5 on the emulated clusters (about 15 minutes) ==[0m
+Error: network did not stabilise: {"heads":[317,317,317,317,317,317,317,317,317,317],"peers":[9,7,7,7,7,7,7,7,1,1]}
+    at waitStable (/Users/joseisraelcampero/.kit-consorcio-run/scripts/loadgen.js:296:9)
+    at async main (/Users/joseisraelcampero/.kit-consorcio-run/scripts/loadgen.js:309:27)
+
+[1;34m== Summary (results/RESULTS.md) ==[0m
+# Results for integration
+
+## Table V · tests, coverage, static analysis
+
+- Tests T1–T12 passing: **12 of 12** (whole suite: 14 passing, 0 failing)
+  - T1: pass
+  - T2: pass
+  - T3: pass
+  - T4: pass
+  - T5: pass
+  - T6: pass
+  - T7: pass
+  - T8: pass
+  - T9: pass
+  - T10: pass
+  - T11: pass
+  - T12: pass
+  - T13: FAIL / not run
+  - T14: FAIL / not run
+  - T15: FAIL / not run
+  - T16: FAIL / not run
+  - T17: FAIL / not run
+- Coverage (CertificateConsortium.sol + ConsortiumGovernance.sol): lines **100.0 %**, branches **65.5 %**, functions 100.0 %, statements 100.0 %
+  - CertificateConsortium.sol: lines 100.0 %, branches 75.0 %
+  - ConsortiumGovernance.sol: lines 100.0 %, branches 59.6 %
+- Slither: 1 findings in all kit contracts {"Optimization":1}; **0 in D2 + governance** {}
+
+## Table VI · gas per function, mean ± SD over 30 runs (Hardhat Network, London rules, warm-up excluded)
+
+| Function | D1 prototype | D2 proposed | D3 registry |
+|---|---|---|---|
+| issue | 374,759 ± 13604.2 | 133,508 ± 0.0 | 100,798 ± 2.2 |
+| recordTransfer | 42,532 ± 0.0 | 37,924 ± 0.0 | 37,961 ± 0.0 |
+| revoke | 27,190 ± 0.0 | 32,983 ± 0.0 | 33,012 ± 0.0 |
+| reissue | — | 164,745 ± 5.8 | — |
+| deployment | 826,519 ± 0.0 | 2,511,114 ± 0.0 | 1,434,927 ± 0.0 |
+
+- issue: D2 vs D1 64.4 % (374,759 → 133,508); token-layer overhead D2 − D3 = 32,710 gas (+32.5 %)
+- recordTransfer: D2 vs D1 10.8 %; revoke: D2 vs D1 -21.3 %
+- deployment: D2 − D3 = 1,076,187 gas (ERC-721/ERC-5192 code)
+- Abstract: issuance uses **[X] = 133,508** gas instead of **[Y] = 374,759**
+
+## Table IV · environment
+
+| Host (CPU, RAM, OS) | Apple M5 · Mac17,2, 10 cores, 16 GB RAM, macOS 27.0.1 (26A434) |
+| Node.js / Hardhat / ethers | v22.23.3 / 2.29.1 / 6.17.0 |
+| solc / optimizer | 0.8.24 / enabled, 200 runs (EVM paris) |
+| OpenZeppelin Contracts | 5.0.2 |
+| Hyperledger Besu | besu/v26.10.0/osx-aarch_64/openjdk-java-25; openjdk version "25.0.4.1" 2026-08-18 LTS; QBFT, 2 s blocks, 5 validators + 5 RPC nodes |
+| solidity-coverage / Slither | 0.8.17 / null |

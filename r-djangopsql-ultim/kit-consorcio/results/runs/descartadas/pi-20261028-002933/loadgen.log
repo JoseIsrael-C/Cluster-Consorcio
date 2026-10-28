@@ -1,0 +1,3 @@
+Error: node 7 not responding
+    at main (/Users/joseisraelcampero/.kit-consorcio-run/scripts/loadgen.js:277:73)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)

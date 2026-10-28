@@ -1,0 +1,28 @@
+{
+  "capturedAt": "2026-10-28T06:57:11.833Z",
+  "host": {
+    "cpu": "Apple M5 · Mac17,2",
+    "cores": 10,
+    "ramGB": 16,
+    "os": "macOS 27.0.1 (26A434)",
+    "arch": "arm64"
+  },
+  "node": "v22.23.3",
+  "hardhat": "2.29.1",
+  "ethers": "6.17.0",
+  "hardhatToolbox": "5.0.0",
+  "solidityCoverage": "0.8.17",
+  "openzeppelin": "5.0.2",
+  "solc": {
+    "version": "0.8.24",
+    "settings": {
+      "optimizer": {
+        "runs": 200
+      },
+      "evmVersion": "paris"
+    }
+  },
+  "besu": "besu/v26.10.0/osx-aarch_64/openjdk-java-25",
+  "java": "openjdk version \"25.0.4.1\" 2026-08-18 LTS",
+  "slither": null
+}

@@ -1,0 +1,93 @@
+[
+  {
+    "case": "V1 genuine certificate",
+    "asExpected": true,
+    "failedChecks": [],
+    "accepted": true
+  },
+  {
+    "case": "V2 incremental update after signing (same h)",
+    "asExpected": true,
+    "failedChecks": [],
+    "accepted": true
+  },
+  {
+    "case": "V3 signed but never registered",
+    "asExpected": true,
+    "failedChecks": [
+      "binding",
+      "registry"
+    ],
+    "accepted": false
+  },
+  {
+    "case": "V4 content altered after signing",
+    "asExpected": true,
+    "failedChecks": [
+      "binding",
+      "registry",
+      "signature"
+    ],
+    "accepted": false
+  },
+  {
+    "case": "V5 registered by campus 3, signed by campus 2",
+    "asExpected": true,
+    "failedChecks": [
+      "binding"
+    ],
+    "accepted": false
+  },
+  {
+    "case": "V6 signer outside the trust anchor (rogue CA)",
+    "asExpected": true,
+    "failedChecks": [
+      "binding",
+      "signature"
+    ],
+    "accepted": false
+  },
+  {
+    "case": "V7 signer certificate revoked in the CA's CRL",
+    "asExpected": true,
+    "failedChecks": [
+      "signature"
+    ],
+    "accepted": false
+  },
+  {
+    "case": "V8 no RFC 3161 timestamp",
+    "asExpected": true,
+    "failedChecks": [
+      "signature"
+    ],
+    "accepted": false
+  },
+  {
+    "case": "V9 certificate revoked on chain",
+    "asExpected": true,
+    "failedChecks": [
+      "binding",
+      "registry"
+    ],
+    "accepted": false
+  },
+  {
+    "case": "G1 writes and other calls refused by the gateway",
+    "asExpected": true,
+    "failedChecks": [],
+    "accepted": null
+  },
+  {
+    "case": "G2 gateway log holds no hash and a truncated address",
+    "asExpected": true,
+    "failedChecks": [],
+    "accepted": null
+  },
+  {
+    "case": "G3 logs older than the retention period deleted",
+    "asExpected": true,
+    "failedChecks": [],
+    "accepted": null
+  }
+]

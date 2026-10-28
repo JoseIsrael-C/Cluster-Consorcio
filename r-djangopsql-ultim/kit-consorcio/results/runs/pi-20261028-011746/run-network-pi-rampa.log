@@ -1,0 +1,125 @@
+node v22.23.3, npm 10.9.9
+
+[1;34m== Compiling contracts (solc 0.8.24) ==[0m
+Nothing to compile
+openjdk version "25.0.4.1" 2026-08-18 LTS
+besu/v26.10.0/osx-aarch_64/openjdk-java-25
+
+[1;34m== Calibrating the Raspberry Pi 4B CPU emulation ==[0m
+{
+  "piFactorTarget": 0.06732348111658457,
+  "periodMs": 60,
+  "onFactor": 0.25693022247060954,
+  "freeMs": 478.30575,
+  "achievedSpeedRatio": 0.057330330717790666,
+  "equivalentGeekbench6SingleCore": 244,
+  "rounds": [
+    {
+      "onFactor": 0.06732348111658457,
+      "achievedSpeedRatio": 0.01764078614836209
+    },
+    {
+      "onFactor": 0.25693022247060954,
+      "achievedSpeedRatio": 0.057330330717790666
+    },
+    {
+      "onFactor": 0.30171528341475684,
+      "achievedSpeedRatio": 0.07805059651517168
+    }
+  ]
+}
+
+[1;34m== Starting 5 Pi-4B clusters: 5 validators + 5 RPC nodes (inter-campus latency 0 ms one way) ==[0m
+Genesis and 5 validator keys in network/generated (plus keys for RPC nodes 5-9)
+QBFT producing blocks (block 2)
+
+[1;34m== Scenarios S1–S5 on the emulated clusters (about 15 minutes) ==[0m
+Network stable at block 17 after 22 s
+CertificateConsortium deployed at 0x5FbDB2315678afecb367f032d93F642f64180aa3 (3515699 gas)
+S1 steady 20 tx/s            TPS 19.57  p50 2.40 s  p95 4.89 s  confirmed 1200/1200 (100.0 %)
+S2 burst of 60               TPS 31.75  p50 1.72 s  p95 1.89 s  confirmed 60/60 (100.0 %)
+S3 one validator down        TPS 19.62  p50 2.09 s  p95 6.54 s  confirmed 1200/1200 (100.0 %)
+  node 4 back in sync after 39.715162109375 s
+S4 two validators down       TPS 2.59  p50 105.79 s  p95 112.51 s  confirmed 300/300 (100.0 %)
+  outage 25.0 s: 0 confirmed, 0 blocks; blocks resumed 87.6 s after restarting validator 3 (RPC up at 24.801042236328126 s)
+S5 verification (read)       p50 3.47 ms  p95 55.89 ms  valid 1000/1000, failed calls 0
+S6 ramp 20 tx/s              TPS 19.00  p50 1.92 s  p95 2.97 s  confirmed 800/800 (100.0 %)
+   step 20 tx/s: submitted at 20.0 tx/s, steady-state 20.3 tx/s
+S6 ramp 40 tx/s              TPS 39.08  p50 2.15 s  p95 3.25 s  confirmed 1600/1600 (100.0 %)
+   step 40 tx/s: submitted at 40.0 tx/s, steady-state 40.0 tx/s
+S6 ramp 60 tx/s              TPS 57.29  p50 2.43 s  p95 3.72 s  confirmed 2400/2400 (100.0 %)
+   step 60 tx/s: submitted at 60.0 tx/s, steady-state 58.9 tx/s
+S6 ramp 80 tx/s              TPS 76.03  p50 3.35 s  p95 5.10 s  confirmed 3200/3200 (100.0 %)
+   step 80 tx/s: submitted at 80.0 tx/s, steady-state 75.4 tx/s
+S6 ramp 100 tx/s             TPS 74.49  p50 5.55 s  p95 12.06 s  confirmed 4000/4000 (100.0 %)
+   step 100 tx/s: submitted at 94.9 tx/s, steady-state 78.8 tx/s (saturated)
+S6 saturation: sustained up to 80 tx/s offered; first saturated step 100 tx/s; generator limit at null; peak steady-state 78.8 tx/s (gas ceiling 112 tx/s)
+Saved results/network.json
+
+[1;34m== Summary (results/RESULTS.md) ==[0m
+# Results for integration
+
+## Table V · tests, coverage, static analysis
+
+- Tests T1–T12 passing: **12 of 12** (whole suite: 14 passing, 0 failing)
+  - T1: pass
+  - T2: pass
+  - T3: pass
+  - T4: pass
+  - T5: pass
+  - T6: pass
+  - T7: pass
+  - T8: pass
+  - T9: pass
+  - T10: pass
+  - T11: pass
+  - T12: pass
+  - T13: FAIL / not run
+  - T14: FAIL / not run
+  - T15: FAIL / not run
+  - T16: FAIL / not run
+  - T17: FAIL / not run
+- Coverage (CertificateConsortium.sol + ConsortiumGovernance.sol): lines **100.0 %**, branches **65.5 %**, functions 100.0 %, statements 100.0 %
+  - CertificateConsortium.sol: lines 100.0 %, branches 75.0 %
+  - ConsortiumGovernance.sol: lines 100.0 %, branches 59.6 %
+- Slither: 1 findings in all kit contracts {"Optimization":1}; **0 in D2 + governance** {}
+
+## Table VI · gas per function, mean ± SD over 30 runs (Hardhat Network, London rules, warm-up excluded)
+
+| Function | D1 prototype | D2 proposed | D3 registry |
+|---|---|---|---|
+| issue | 374,759 ± 13604.2 | 133,508 ± 0.0 | 100,798 ± 2.2 |
+| recordTransfer | 42,532 ± 0.0 | 37,924 ± 0.0 | 37,961 ± 0.0 |
+| revoke | 27,190 ± 0.0 | 32,983 ± 0.0 | 33,012 ± 0.0 |
+| reissue | — | 164,745 ± 5.8 | — |
+| deployment | 826,519 ± 0.0 | 2,511,114 ± 0.0 | 1,434,927 ± 0.0 |
+
+- issue: D2 vs D1 64.4 % (374,759 → 133,508); token-layer overhead D2 − D3 = 32,710 gas (+32.5 %)
+- recordTransfer: D2 vs D1 10.8 %; revoke: D2 vs D1 -21.3 %
+- deployment: D2 − D3 = 1,076,187 gas (ERC-721/ERC-5192 code)
+- Abstract: issuance uses **[X] = 133,508** gas instead of **[Y] = 374,759**
+
+## Table VII · last single run, results/network.json (5 validators, 2 s blocks)
+
+| Scenario | TPS | p50 (s) | p95 (s) | Confirmed |
+|---|---|---|---|---|
+| S1 steady, 20 tx/s | 19.57 | 2.40 | 4.89 | 100.0 % (1200/1200) |
+| S2 burst of 60 | 31.75 | 1.72 | 1.89 | 100.0 % (60/60) |
+| S3 one validator down | 19.62 | 2.09 | 6.54 | 100.0 % (1200/1200) |
+| S4 two validators down | 0 | — | — | 0.0 % (0/300) during a 25 s outage; 0 blocks |
+| S5 verification (read) | — | 0.0035 | 0.0559 | — |
+
+- S4 recovery: block production resumed **87.6 s** after restarting the fourth validator (its RPC answered at 24.8 s); afterwards 300 of the 300 queued transactions were confirmed (100.0 % in total).
+- S3: mean block interval 3.00 s (max 6 s) vs S1 2.14 s; validator 4 resynchronised 39.7 s after restart.
+- S1 blocks: 41.4 tx/block on average (max 75); issue gas on Besu (receipts, n=100): 133,506 ± 4.2, reverted 0.
+- D2 deployment on Besu: 3,515,699 gas
+- Abstract: **[Z] = 19.6 tx/s** sustained; **[W] = 2.40 s** median confirmation latency (S1)
+
+## Table IV · environment
+
+| Host (CPU, RAM, OS) | Apple M5 · Mac17,2, 10 cores, 16 GB RAM, macOS 27.0.1 (26A434) |
+| Node.js / Hardhat / ethers | v22.23.3 / 2.29.1 / 6.17.0 |
+| solc / optimizer | 0.8.24 / enabled, 200 runs (EVM paris) |
+| OpenZeppelin Contracts | 5.0.2 |
+| Hyperledger Besu | besu/v26.10.0/osx-aarch_64/openjdk-java-25; openjdk version "25.0.4.1" 2026-08-18 LTS; QBFT, 2 s blocks, 5 validators + 5 RPC nodes |
+| solidity-coverage / Slither | 0.8.17 / null |

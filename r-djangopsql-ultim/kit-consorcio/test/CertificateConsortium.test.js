@@ -1,4 +1,4 @@
-// Functional and security tests T1–T12 (Table V). Run: npx hardhat test
+// Functional and security tests T1–T17 (Table 5 of the paper). Run: npx hardhat test
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 const { loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
@@ -22,7 +22,7 @@ async function deployConsortium() {
   return { cc, c1, c2, c3, c4, c5, outsider, newcomer };
 }
 
-describe("CertificateConsortium (D2) · T1–T16", function () {
+describe("CertificateConsortium (D2) · T1–T17", function () {
   it("T1 access control: a non-member cannot issue", async function () {
     const { cc, outsider } = await loadFixture(deployConsortium);
     await expect(cc.connect(outsider).issue(h("pdf-1"), 1)).to.be.revertedWithCustomError(cc, "NotActiveMember");
@@ -264,5 +264,37 @@ describe("CertificateConsortium (D2) · T1–T16", function () {
     await cc.connect(c5).issue(h("pdf-new-key"), 1);
     expect((await cc.verify(h("pdf-new-key")))[0]).to.equal(true);
     expect((await cc.verify(h("pdf-still-compromised")))[0]).to.equal(false);
+  });
+  it("T17 found by the model-based tests: stale proposals cannot execute and no declaration reaches back more than 7 days", async function () {
+    const { cc, c1, c2, c3, c4, c5 } = await loadFixture(deployConsortium);
+    // two suspension proposals against the same campus: once one executes, the other can no longer collect votes,
+    // so activeMembers cannot be decremented twice
+    await cc.connect(c1).propose(SUSPEND, c5.address, 0, Z);
+    await cc.connect(c2).propose(SUSPEND, c5.address, 0, Z);
+    for (const s of [c2, c3, c4]) await cc.connect(s).vote(0);
+    expect(await cc.activeMembers()).to.equal(4n);
+    await expect(cc.connect(c1).vote(1)).to.be.revertedWithCustomError(cc, "StaleProposal");
+    // the same holds for a readmission proposed twice
+    await cc.connect(c1).propose(READMIT, c5.address, 0, Z);
+    await cc.connect(c2).propose(READMIT, c5.address, 0, Z);
+    await cc.connect(c2).vote(2);
+    await cc.connect(c3).vote(2);
+    expect(await cc.activeMembers()).to.equal(5n);
+    await expect(cc.connect(c3).vote(3)).to.be.revertedWithCustomError(cc, "StaleProposal");
+    // a suspension that also declares a compromise is held to the same seven-day bound as a declaration
+    await expect(cc.connect(c1).propose(SUSPEND, c5.address, 0, hex((await now()) - 30n * BigInt(DAY))))
+      .to.be.revertedWithCustomError(cc, "InvalidData");
+    await expect(cc.connect(c1).propose(SUSPEND, c5.address, 0, hex((await now()) + 1000n)))
+      .to.be.revertedWithCustomError(cc, "InvalidData");
+    // a declaration voted late is clamped to seven days before its execution
+    const since = await now();
+    await cc.connect(c1).propose(COMPROMISE, c4.address, 0, hex(since));
+    await cc.connect(c2).vote(4);
+    await ethers.provider.send("evm_increaseTime", [10 * DAY]);
+    await ethers.provider.send("evm_mine", []);
+    await cc.connect(c3).vote(4);
+    const c = await cc.compromiseAt(4, 0);
+    expect(c.declaredAt - c.since).to.equal(BigInt(7 * DAY));
+    expect(c.since).to.be.greaterThan(since);
   });
 });

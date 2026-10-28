@@ -1,0 +1,10 @@
+Network stable at block 17 after 21 s
+CertificateConsortium deployed at 0x5FbDB2315678afecb367f032d93F642f64180aa3 (3515699 gas)
+S1 steady 20 tx/s            TPS 19.21  p50 3.67 s  p95 9.11 s  confirmed 1200/1200 (100.0 %)
+S2 burst of 60               TPS 19.71  p50 2.14 s  p95 2.83 s  confirmed 60/60 (100.0 %)
+S3 one validator down        TPS 18.75  p50 2.85 s  p95 7.18 s  confirmed 1200/1200 (100.0 %)
+  node 4 back in sync after 36.31793725585938 s
+S4 two validators down       TPS 2.50  p50 103.86 s  p95 116.32 s  confirmed 300/300 (100.0 %)
+  outage 25.1 s: 0 confirmed, 0 blocks; blocks resumed 83.4 s after restarting validator 3 (RPC up at 20.421992919921873 s)
+S5 verification (read)       p50 3.69 ms  p95 58.65 ms  valid 1000/1000, failed calls 0
+Saved results/network.json

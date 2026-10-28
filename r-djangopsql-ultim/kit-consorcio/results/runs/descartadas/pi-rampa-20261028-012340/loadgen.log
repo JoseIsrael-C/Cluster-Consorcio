@@ -1,0 +1,8 @@
+Network stable at block 37 after 22 s
+CertificateConsortium deployed at 0x5FbDB2315678afecb367f032d93F642f64180aa3 (3515699 gas)
+S6 ramp 20 tx/s              TPS 18.62  p50 6.11 s  p95 13.48 s  confirmed 800/800 (100.0 %)
+   step 20 tx/s: submitted at 20.0 tx/s, steady-state 21.9 tx/s
+S6 ramp 40 tx/s              TPS 29.97  p50 7.84 s  p95 17.53 s  confirmed 1600/1600 (100.0 %)
+   step 40 tx/s: submitted at 40.0 tx/s, steady-state 26.5 tx/s (saturated)
+S6 saturation: sustained up to 20 tx/s offered; first saturated step 40 tx/s; generator limit at null; peak steady-state 26.5 tx/s (gas ceiling 112 tx/s)
+Saved results/network.json

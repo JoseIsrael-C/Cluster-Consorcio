@@ -1,0 +1,21 @@
+Network stable at block 18 after 22 s
+CertificateConsortium deployed at 0x5FbDB2315678afecb367f032d93F642f64180aa3 (3515699 gas)
+S1 steady 20 tx/s            TPS 19.45  p50 2.54 s  p95 7.22 s  confirmed 1200/1200 (100.0 %)
+S2 burst of 60               TPS 19.39  p50 0.91 s  p95 2.80 s  confirmed 60/60 (100.0 %)
+S3 one validator down        TPS 19.82  p50 3.09 s  p95 7.65 s  confirmed 1200/1200 (100.0 %)
+  node 4 back in sync after 38.06553369140625 s
+S4 two validators down       TPS 2.52  p50 108.18 s  p95 115.19 s  confirmed 300/300 (100.0 %)
+  outage 25.1 s: 0 confirmed, 0 blocks; blocks resumed 89.7 s after restarting validator 3 (RPC up at 26.108101318359374 s)
+S5 verification (read)       p50 5.77 ms  p95 64.94 ms  valid 1000/1000, failed calls 0
+S6 ramp 20 tx/s              TPS 18.77  p50 2.25 s  p95 3.43 s  confirmed 800/800 (100.0 %)
+   step 20 tx/s: submitted at 20.0 tx/s, steady-state 20.0 tx/s
+S6 ramp 40 tx/s              TPS 36.87  p50 2.68 s  p95 4.10 s  confirmed 1600/1600 (100.0 %)
+   step 40 tx/s: submitted at 40.0 tx/s, steady-state 39.1 tx/s
+S6 ramp 60 tx/s              TPS 56.12  p50 2.79 s  p95 4.26 s  confirmed 2400/2400 (100.0 %)
+   step 60 tx/s: submitted at 60.0 tx/s, steady-state 59.1 tx/s
+S6 ramp 80 tx/s              TPS 65.65  p50 4.85 s  p95 9.84 s  confirmed 3200/3200 (100.0 %)
+   step 80 tx/s: submitted at 78.3 tx/s, steady-state 70.9 tx/s
+S6 ramp 100 tx/s             TPS 63.62  p50 6.19 s  p95 14.42 s  confirmed 4000/4000 (100.0 %)
+   step 100 tx/s: submitted at 74.6 tx/s, steady-state 60.2 tx/s (generator limit)
+S6 saturation: sustained up to 80 tx/s offered; first saturated step null tx/s; generator limit at 100; peak steady-state 70.9 tx/s (gas ceiling 112 tx/s)
+Saved results/network.json
